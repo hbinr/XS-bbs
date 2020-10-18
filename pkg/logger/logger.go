@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"XS-bbs/pkg/setting"
+	"XS-bbs/pkg/config"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -19,7 +19,7 @@ import (
 var lg *zap.Logger
 
 // Init 初始化Logger
-func Init(cfg *setting.LogConfig) (err error) {
+func Init(cfg *config.LogConfig) (err error) {
 	writeSyncer := getLogWriter(
 		cfg.Filename,   // 日志文件的位置
 		cfg.MaxSize,    // 在进行切割之前，日志文件的最大大小（以MB为单位）
@@ -56,7 +56,7 @@ func getEncoder() zapcore.Encoder {
 
 // customTimeEncoder 自定义日志输出时间格式
 func customTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format(setting.Conf.LogConfig.Prefix + "2006/01/02 - 15:04:05.000"))
+	enc.AppendString(t.Format(config.Conf.LogConfig.Prefix + "2006/01/02 - 15:04:05.000"))
 }
 
 // getLogWriter 指定日志将写到哪里去，并使用Lumberjack进行日志切割归档
