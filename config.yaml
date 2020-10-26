@@ -1,0 +1,31 @@
+system:
+  app_name: "myApp"
+  mode: "dev"
+  port: 8090
+  version: "v0.0.1"
+  start_time: "2020-10-01"
+  machine_id: 1
+
+log:
+  prefix: "[xs-bbs]"
+  level: "debug"
+  filename: "../log/xs-bbs.log"
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+
+mysql:
+  addr: "127.0.0.1:3306"
+  dsn: "root:123456@tcp(127.0.0.1:3306)/study?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
+  log_mode: true
+  max_open_conns: 10
+  max_idle_conns: 10
+
+
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  password: ""
+  db: 0
+  pool_size: 100
+  min_idle_conns: 5

@@ -1,0 +1,111 @@
+basePath: /api/v1
+definitions:
+  ginx.Response:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+  model.UserDto:
+    properties:
+      email:
+        description: 邮箱
+        type: string
+      nickname:
+        description: 昵称
+        type: string
+      password:
+        description: 密码
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
+host: 127.0.0.1
+info:
+  contact:
+    email: support@swagger.io
+    name: 这里写联系人信息
+    url: http://www.swagger.io/support
+  description: 这是一个gin web开发脚手架
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: 项目标题
+  version: 0.0.1
+paths:
+  /user/Get:
+    get:
+      consumes:
+      - application/json
+      description: 根据id获取用户
+      operationId: /user/Get
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/ginx.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserDto'
+              type: object
+      summary: 根据id获取用户
+      tags:
+      - 用户接口
+  /user/delete:
+    get:
+      consumes:
+      - application/json
+      description: 根据id删除用户
+      operationId: /user/delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/ginx.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 根据id删除用户
+      tags:
+      - 用户接口
+  /user/signup:
+    post:
+      consumes:
+      - application/json
+      description: 用户注册
+      operationId: /user/signup
+      parameters:
+      - description: 用户注册接口
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.UserDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/ginx.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserDto'
+              type: object
+      summary: 用户注册账号
+      tags:
+      - 用户接口
+swagger: "2.0"
