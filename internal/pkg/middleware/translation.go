@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	ut "github.com/go-playground/universal-translator"
+	"xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/pkg/constant/key"
 
 	"github.com/gin-gonic/gin"

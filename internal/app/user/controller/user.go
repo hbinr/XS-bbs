@@ -46,11 +46,13 @@ func NewUseController(e *gin.Engine, us service.IUserService) (*UserController, 
 func (u *UserController) SignUp(c *gin.Context) {
 	var (
 		err    error
-		uParam model.ParamSignUp
+		uParam model.SignUpParam
 		uDto   model.UserDto
 	)
-
-	_ = c.ShouldBind(&uParam)
+	if err = uParam.BindValidParam(c); err != nil {
+		ginx.FailWithMessage(err.Error(), c)
+		return
+	}
 	if err = gconv.Struct(uParam, &uDto); err != nil {
 		ginx.FailWithMessage("数据转换异常", c)
 		return

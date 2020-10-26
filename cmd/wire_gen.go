@@ -7,7 +7,6 @@ package main
 
 import (
 	"xs.bbs/pkg/log"
-	"log"
 
 	"github.com/google/wire"
 	"xs.bbs/internal/app"
