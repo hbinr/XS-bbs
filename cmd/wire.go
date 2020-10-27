@@ -16,6 +16,7 @@ var controllerSet = wire.NewSet(
 	controller.NewUseController)
 
 // initWebApp 注入函数，自定义的函数直接注入就行，不需要使用wire set
+// 注意：log.Init()和snowflake.Init() 不需要提供provider，所以需要在生成wire_gen后手动加入它们的初始化
 func initWebApp() (*app.WebApp, error) {
 	// 逻辑顺序入参，未用到的依赖不需要注入
 	wire.Build(

@@ -12,8 +12,8 @@ package main
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host 127.0.0.1
-// @BasePath /api/v1
+// @host 127.0.0.1:8090
+// @BasePath /api/
 func main() {
 	webApp, err := initWebApp()
 	if err != nil {

@@ -26,12 +26,12 @@ func Result(code int, data interface{}, msg string, c *gin.Context) {
 
 // Ok 响应成功
 func Ok(c *gin.Context) {
-	Result(e.SUCCESS, map[string]interface{}{}, "操作成功", c)
+	Result(e.SUCCESS, nil, "操作成功", c)
 }
 
 // OkWithMessage 响应成功且只携带信息
 func OkWithMessage(message string, c *gin.Context) {
-	Result(e.SUCCESS, map[string]interface{}{}, message, c)
+	Result(e.SUCCESS, nil, message, c)
 }
 
 // OkWithData 响应成功且只携带数据
@@ -46,15 +46,17 @@ func OkDetailed(data interface{}, message string, c *gin.Context) {
 
 // Fail 响应失败
 func Fail(c *gin.Context) {
-	Result(e.ERROR, map[string]interface{}{}, e.GetMsg(e.ERROR), c)
+	Result(e.ERROR, nil, e.GetMsg(e.ERROR), c)
 }
 
 // FailWithMessage 响应失败且携带错误信息
 func FailWithMessage(message string, c *gin.Context) {
-	Result(e.ERROR, map[string]interface{}{}, message, c)
+	Result(e.ERROR, nil, message, c)
 }
 
 // FailWithDetailed 响应失败且携带错误信息+数据
 func FailWithDetailed(code int, data interface{}, message string, c *gin.Context) {
 	Result(code, data, message, c)
 }
+
+

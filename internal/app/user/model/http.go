@@ -1,35 +1,10 @@
 package model
 
-import (
-	"github.com/gin-gonic/gin"
-	ut "github.com/go-playground/universal-translator"
-	"github.com/go-playground/validator/v10"
-
-	"xs.bbs/internal/pkg/ginx"
-)
-
-// SignUpParam 用户注册结构体
+// SignUpParam 用户注册参数
 type SignUpParam struct {
-	Username   string `json:"username" form:"username" comment:"用户名" validate:"required,valid_username"`
-	Password   string `json:"password"`
-	RePassword string `json:"rePassword"`
-	NickName   string `json:"nickName"`
-}
-
-func (param *SignUpParam) BindValidParam(c *gin.Context) error {
-	return ginx.DefaultGetValidParams(c, param)
-}
-func UserParamValidAndTrans(val *validator.Validate, trans ut.Translator) {
-	//自定义验证方法
-	val.RegisterValidation("valid_username", func(fl validator.FieldLevel) bool {
-		return fl.Field().String() == "admin"
-	})
-
-	//自定义翻译器
-	val.RegisterTranslation("valid_username", trans, func(ut ut.Translator) error {
-		return ut.Add("valid_username", "{0} 填写不正确哦", true)
-	}, func(ut ut.Translator, fe validator.FieldError) string {
-		t, _ := ut.T("valid_username", fe.Field())
-		return t
-	})
+	Username   string `json:"username" form:"username" v:"username@required|length:6,30#请输入用户名|用户名长度应当在:min到:max之间"`  // 用户名
+	Password   string `json:"password" form:"password" v:"password@required|length:6,16#请输入密码|密码长度应当在:min到:max之间"`    // 密码
+	RePassword string `json:"rePassword" form:"rePassword" v:"rePassword@required|same:password#请输入密码|两次密码不一致，请重新输入"` // 重复密码
+	Nickname   string `json:"nickname" form:"nickname" v:"nickname@required#请输入中文名"`                                  // 中文名
+	Email      string `json:"email" form:"email" v:"email@required|email#请输入邮箱|邮箱不合法"`                                // 邮箱
 }

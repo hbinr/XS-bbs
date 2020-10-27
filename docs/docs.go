@@ -47,6 +47,15 @@ var doc = `{
                 ],
                 "summary": "根据id获取用户",
                 "operationId": "/user/Get",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "success",
@@ -83,6 +92,15 @@ var doc = `{
                 ],
                 "summary": "根据id删除用户",
                 "operationId": "/user/delete",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "success",
@@ -121,12 +139,12 @@ var doc = `{
                 "operationId": "/user/signup",
                 "parameters": [
                     {
-                        "description": "用户注册接口",
+                        "description": "body",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/model.UserDto"
+                            "$ref": "#/definitions/model.SignUpParam"
                         }
                     }
                 ],
@@ -168,6 +186,31 @@ var doc = `{
                 }
             }
         },
+        "model.SignUpParam": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "nickName": {
+                    "description": "s",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "s",
+                    "type": "string"
+                },
+                "rePassword": {
+                    "description": "s",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "s",
+                    "type": "string"
+                }
+            }
+        },
         "model.UserDto": {
             "type": "object",
             "properties": {
@@ -204,8 +247,8 @@ type swaggerInfo struct {
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
 	Version:     "0.0.1",
-	Host:        "127.0.0.1",
-	BasePath:    "/api/v1",
+	Host:        "127.0.0.1:8090",
+	BasePath:    "/api/",
 	Schemes:     []string{},
 	Title:       "项目标题",
 	Description: "这是一个gin web开发脚手架",

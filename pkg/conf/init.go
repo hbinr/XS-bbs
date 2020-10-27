@@ -31,8 +31,7 @@ func Init() (*Config, error) {
 
 	v.SetConfigFile(configFile)
 	if err = v.ReadInConfig(); err != nil {
-		fmt.Println("ReadInConfig:", err)
-		panic(fmt.Errorf("Fatal error conf file: %s", err))
+		panic(fmt.Sprintf("Fatal error conf file: %s", err))
 	}
 
 	v.WatchConfig()

@@ -6,8 +6,6 @@
 package main
 
 import (
-	"xs.bbs/pkg/log"
-
 	"github.com/google/wire"
 	"xs.bbs/internal/app"
 	"xs.bbs/internal/app/user/controller"
@@ -15,6 +13,8 @@ import (
 	"xs.bbs/internal/app/user/service"
 	"xs.bbs/pkg/conf"
 	"xs.bbs/pkg/database"
+	"xs.bbs/pkg/log"
+	"xs.bbs/pkg/tool/snowflake"
 )
 
 // Injectors from wire.go:
@@ -24,7 +24,10 @@ func initWebApp() (*app.WebApp, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := log.Init(config); err != nil {
+	if err = log.Init(config); err != nil {
+		return nil, err
+	}
+	if err = snowflake.Init(config); err != nil {
 		return nil, err
 	}
 	engine, err := app.InitEngine(config)

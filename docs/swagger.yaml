@@ -1,4 +1,4 @@
-basePath: /api/v1
+basePath: /api/
 definitions:
   ginx.Response:
     properties:
@@ -8,6 +8,24 @@ definitions:
         type: object
       msg:
         type: string
+    type: object
+  model.SignUpParam:
+    properties:
+      nickName:
+        description: s
+        type: string
+      password:
+        description: s
+        type: string
+      rePassword:
+        description: s
+        type: string
+      username:
+        description: s
+        type: string
+    required:
+    - password
+    - username
     type: object
   model.UserDto:
     properties:
@@ -24,7 +42,7 @@ definitions:
         description: 用户名
         type: string
     type: object
-host: 127.0.0.1
+host: 127.0.0.1:8090
 info:
   contact:
     email: support@swagger.io
@@ -44,6 +62,12 @@ paths:
       - application/json
       description: 根据id获取用户
       operationId: /user/Get
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -65,6 +89,12 @@ paths:
       - application/json
       description: 根据id删除用户
       operationId: /user/delete
+      parameters:
+      - description: id
+        in: query
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -87,12 +117,12 @@ paths:
       description: 用户注册
       operationId: /user/signup
       parameters:
-      - description: 用户注册接口
+      - description: body
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/model.UserDto'
+          $ref: '#/definitions/model.SignUpParam'
       produces:
       - application/json
       responses:
