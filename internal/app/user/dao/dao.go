@@ -16,13 +16,11 @@ var UserDaoSet = wire.NewSet(
 	wire.Struct(new(UserDao), "*"),
 	wire.Bind(new(IUserDao), new(*UserDao)))
 
-//func NewUserDao(db *gorm.DB) IUserDao {
-//	return &UserDao{
-//		DB: db,
-//	}
-//}
-
 type UserModel = model.User
+
+type UserDao struct {
+	DB *gorm.DB
+}
 
 // IUserDao User dao 接口定义
 type IUserDao interface {
@@ -35,8 +33,4 @@ type IUserDao interface {
 	CheckUserByUserName(userName string) error
 	// CheckUserByEmail 通过用户email检查用户
 	CheckUserByEmail(email string) error
-}
-
-type UserDao struct {
-	DB *gorm.DB
 }

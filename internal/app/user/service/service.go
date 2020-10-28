@@ -14,13 +14,9 @@ var UserServiceSet = wire.NewSet(
 	wire.Struct(new(UserService), "*"),
 	wire.Bind(new(IUserService), new(*UserService)))
 
-//func NewUserService(db *gorm.DB) IUserService {
-//	return &UserService{
-//		Dao: dao.NewUserDao(db),
-//	}
-//}
-
-// IUserService user service 接口定义
+type UserService struct {
+	Dao dao.IUserDao
+}
 type IUserService interface {
 	// SignUp 注册
 	SignUp(signUp *model.SignUpParam) (*model.UserDto, error)
@@ -30,8 +26,4 @@ type IUserService interface {
 	Update(user *model.UserDto) error
 	SelectByID(id int64) (*model.UserDto, error)
 	SelectByName(userName string) (*model.UserDto, error)
-}
-
-type UserService struct {
-	Dao dao.IUserDao
 }

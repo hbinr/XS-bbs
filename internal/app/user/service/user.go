@@ -1,11 +1,8 @@
 package service
 
 import (
-	"errors"
-
 	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
-	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/pkg/tool/hash"
 	"xs.bbs/pkg/tool/snowflake"
 
@@ -42,13 +39,13 @@ func (u *UserService) SignIn(signIn *model.SignInParam) (err error) {
 	var user *model.User
 
 	if err = u.Dao.CheckUserByUserName(signIn.Username); err == nil {
-		return errors.New(e.ERROR_NOT_EXIST_USER.Msg())
+		return
 	}
 	if user, err = u.Dao.SelectByName(signIn.Username); err != nil {
 		return
 	}
 	if user.Password != hash.MD5String(signIn.Password) {
-		return errors.New("密码错误")
+		return
 	}
 	return
 }

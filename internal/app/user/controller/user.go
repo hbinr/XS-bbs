@@ -1,6 +1,9 @@
 package controller
 
 import (
+	"errors"
+
+	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
@@ -25,15 +28,23 @@ func (u *UserController) SignUp(c *gin.Context) {
 		uDto   *model.UserDto
 	)
 	if errStr := ginx.BindAndValid(c, &uParam); errStr != "" {
-		ginx.FailWithMessage(errStr, c)
+		ginx.ResponseErrorWithMsg(c, e.CODE_ERROR, errStr)
 		return
 	}
 
 	if uDto, err = u.userService.SignUp(&uParam); err != nil {
-		ginx.FailWithMessage(err.Error(), c)
+		if errors.Is(err, dao.ErrUserExist) {
+			ginx.ResponseError(c, e.CODE_USER_EXIST)
+			return
+		}
+		if errors.Is(err, dao.ErrEmailExist) {
+			ginx.ResponseError(c, e.CODE_EMAIL_EXIST)
+			return
+		}
+		ginx.ResponseError(c, e.CODE_ERROR)
 		return
 	}
-	ginx.OkDetailed(uDto, "注册用户成功", c)
+	ginx.ResponseSuccess(c, uDto)
 }
 
 // SignIn godoc
@@ -52,15 +63,15 @@ func (u *UserController) SignIn(c *gin.Context) {
 		signParam model.SignInParam
 	)
 	if errStr := ginx.BindAndValid(c, &signParam); errStr != "" {
-		ginx.FailWithMessage(errStr, c)
+		ginx.ResponseErrorWithMsg(c, e.CODE_ERROR, errStr)
 		return
 	}
 
 	if err = u.userService.SignIn(&signParam); err != nil {
-		ginx.FailWithMessage(e.ERROR_WRONG_USER_NAME_OR_PASSWORD.Msg(), c)
+		ginx.ResponseError(c, e.CODE_WRONG_USERNAME_OR_PASSWORD)
 		return
 	}
-	ginx.OkWithMessage("登陆成功", c)
+	ginx.ResponseSuccess(c, nil)
 }
 
 // Get godoc
@@ -81,15 +92,15 @@ func (u *UserController) Get(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.FailWithMessage(e.CODE_INVALID_PARAMS.Msg(), c)
+		ginx.ResponseError(c, e.CODE_INVALID_PARAMS)
 		return
 	}
 
 	if uDto, err = u.userService.SelectByID(int64(userID)); err != nil {
-		ginx.FailWithMessage("获取用户失败", c)
+		ginx.ResponseError(c, e.CODE_ERROR)
 		return
 	}
-	ginx.OkDetailed(&uDto, "获取用户成功", c)
+	ginx.ResponseSuccess(c, uDto)
 }
 
 // Delete godoc
@@ -109,13 +120,13 @@ func (u *UserController) Delete(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.FailWithMessage(e.CODE_INVALID_PARAMS.Msg(), c)
+		ginx.ResponseError(c, e.CODE_INVALID_PARAMS)
 		return
 	}
 
 	if !u.userService.Delete(int64(userID)) {
-		ginx.FailWithMessage("删除用户失败", c)
+		ginx.ResponseError(c, e.CODE_ERROR)
 		return
 	}
-	ginx.OkWithMessage("删除用户成功", c)
+	ginx.ResponseSuccess(c, nil)
 }

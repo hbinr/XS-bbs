@@ -16,7 +16,7 @@ func BindAndValid(c *gin.Context, params interface{}) string {
 		return fmt.Sprintf("%s-err:%s", e.CODE_INVALID_PARAMS.Msg(), err.Error())
 	}
 	if err := gvalid.CheckStruct(params, nil); err != nil {
-		zap.L().Error(e.CODE_INVALID_PARAMS.Msg(), zap.Error(err))
+		zap.L().Error(e.CODE_VALIDATE_PARAMS_ERR.Msg(), zap.Error(err))
 		return err.FirstString()
 	}
 	return ""

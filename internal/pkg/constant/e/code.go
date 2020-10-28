@@ -4,13 +4,14 @@ package e
 type ResCode int
 
 const (
-	CODE_SUCCESS        ResCode = 200
-	CODE_ERROR          ResCode = 500
-	CODE_INVALID_PARAMS ResCode = 400
-
-	ERROR_VALIDATE_PARAMS             ResCode = 10000
-	ERROR_NOT_EXIST_USER              ResCode = 10001
-	ERROR_EXIST_USER                  ResCode = 10002
-	ERROR_EXIST_EMAIL                 ResCode = 10003
-	ERROR_WRONG_USER_NAME_OR_PASSWORD ResCode = 10004
+	CODE_SUCCESS                    ResCode = 200
+	CODE_INVALID_PARAMS             ResCode = 400
+	CODE_ERROR                      ResCode = 500
+	CODE_CONV_DATA_ERR              ResCode = 10000
+	CODE_VALIDATE_PARAMS_ERR        ResCode = 10001
+	CODE_USER_NOT_EXIST             ResCode = 20001
+	CODE_USER_EXIST                 ResCode = 20002
+	CODE_EMAIL_EXIST                ResCode = 20003
+	CODE_WRONG_PASSWORD             ResCode = 20004
+	CODE_WRONG_USERNAME_OR_PASSWORD ResCode = 20005
 )

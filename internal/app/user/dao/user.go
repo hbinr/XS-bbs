@@ -8,6 +8,12 @@ import (
 	"xs.bbs/internal/pkg/constant/e"
 )
 
+var (
+	ErrUserExist    = errors.New(e.CODE_USER_EXIST.Msg())
+	ErrUserNotExist = errors.New(e.CODE_USER_NOT_EXIST.Msg())
+	ErrEmailExist   = errors.New(e.CODE_EMAIL_EXIST.Msg())
+)
+
 // Insert 新增用户
 func (u *UserDao) Insert(user *UserModel) (err error) {
 	return u.DB.Create(&user).Error
@@ -41,7 +47,7 @@ func (u *UserDao) SelectByID(userID int64) (*UserModel, error) {
 	if err = u.DB.Where("user_id = ?", userID).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			zap.L().Error("userDao.SelectByID", zap.Error(err))
-			return nil, errors.New(e.ERROR_NOT_EXIST_USER.Msg())
+			return nil, ErrUserNotExist
 		}
 		return nil, err
 	}
@@ -55,7 +61,7 @@ func (u *UserDao) CheckUserByUserName(userName string) error {
 		return err
 	}
 	if count > 0 {
-		return errors.New(e.ERROR_EXIST_USER.Msg())
+		return ErrUserExist
 	}
 	return nil
 }
@@ -67,7 +73,7 @@ func (u *UserDao) CheckUserByEmail(email string) error {
 		return err
 	}
 	if count > 0 {
-		return errors.New(e.ERROR_EXIST_EMAIL.Msg())
+		return ErrEmailExist
 	}
 	return nil
 }
