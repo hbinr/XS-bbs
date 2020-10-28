@@ -36,6 +36,33 @@ func (u *UserController) SignUp(c *gin.Context) {
 	ginx.OkDetailed(uDto, "注册用户成功", c)
 }
 
+// SignIn godoc
+// @Summary 登录
+// @Description 登录
+// @Tags 用户接口
+// @ID /user/signin
+// @Accept  json
+// @Produce json
+// @Param body body model.SignInParam true "body参数"
+// @Success 200 {string} string "ok" "登陆成功"
+// @Router /user/signin [post]
+func (u *UserController) SignIn(c *gin.Context) {
+	var (
+		err       error
+		signParam model.SignInParam
+	)
+	if errStr := ginx.BindAndValid(c, &signParam); errStr != "" {
+		ginx.FailWithMessage(errStr, c)
+		return
+	}
+
+	if err = u.userService.SignIn(&signParam); err != nil {
+		ginx.FailWithMessage(e.ERROR_WRONG_USER_NAME_OR_PASSWORD.Msg(), c)
+		return
+	}
+	ginx.OkWithMessage("登陆成功", c)
+}
+
 // Get godoc
 // @Summary 根据id获取用户
 // @Description 根据id获取用户
@@ -54,11 +81,11 @@ func (u *UserController) Get(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.FailWithMessage(e.GetMsg(e.INVALID_PARAMS), c)
+		ginx.FailWithMessage(e.CODE_INVALID_PARAMS.Msg(), c)
 		return
 	}
 
-	if uDto, err = u.userService.SelectById(int64(userID)); err != nil {
+	if uDto, err = u.userService.SelectByID(int64(userID)); err != nil {
 		ginx.FailWithMessage("获取用户失败", c)
 		return
 	}
@@ -82,7 +109,7 @@ func (u *UserController) Delete(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.FailWithMessage(e.GetMsg(e.INVALID_PARAMS), c)
+		ginx.FailWithMessage(e.CODE_INVALID_PARAMS.Msg(), c)
 		return
 	}
 

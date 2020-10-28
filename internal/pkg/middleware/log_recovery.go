@@ -11,7 +11,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"xs.bbs/pkg/log"
 )
 
 // GinLogger 接收gin框架默认的日志
@@ -24,7 +23,7 @@ func GinLogger() gin.HandlerFunc {
 
 		cost := time.Since(start)
 		// 自定义日志输出内容
-		log.Info(path,
+		zap.L().Info(path,
 			zap.Int("status", c.Writer.Status()),   // 响应状态
 			zap.String("method", c.Request.Method), // 请求方式,eg:GFT/POST...
 			zap.String("path", path),               // 请求路径
@@ -55,7 +54,7 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 
 				httpRequest, _ := httputil.DumpRequest(c.Request, false)
 				if brokenPipe {
-					log.Error(c.Request.URL.Path,
+					zap.L().Error(c.Request.URL.Path,
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),
 					)
@@ -66,13 +65,13 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 				}
 
 				if stack {
-					log.Error("[Recovery from panic]",
+					zap.L().Error("[Recovery from panic]",
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),
 						zap.String("stack", string(debug.Stack())),
 					)
 				} else {
-					log.Error("[Recovery from panic]",
+					zap.L().Error("[Recovery from panic]",
 						zap.Any("error", err),
 						zap.String("request", string(httpRequest)),
 					)

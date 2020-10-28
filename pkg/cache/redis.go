@@ -3,8 +3,8 @@ package cache
 import (
 	"fmt"
 
+	"go.uber.org/zap"
 	"xs.bbs/pkg/conf"
-	"xs.bbs/pkg/log"
 
 	"github.com/go-redis/redis"
 )
@@ -21,7 +21,7 @@ func Init(cfg *conf.RedisConfig) *redis.Client {
 		MinIdleConns: cfg.MinIdleConns,
 	})
 	if _, err := rdb.Ping().Result(); err != nil {
-		log.Error("redis ping failed", err)
+		zap.L().Error("redis ping failed", zap.Error(err))
 	}
 	return rdb
 }

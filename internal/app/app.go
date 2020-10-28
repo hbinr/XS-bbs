@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"net/http"
 
 	_ "xs.bbs/docs"
 
@@ -35,6 +36,9 @@ func InitEngine(c *conf.Config) (*gin.Engine, error) {
 		middleware.GinLogger(),       // zap logger中间件
 		middleware.GinRecovery(true)) // zap recovery中间件
 	r.Group("/api")
+	r.GET("/ping", func(c *gin.Context) {
+		c.String(http.StatusOK, "ping success")
+	})
 	return r, nil
 }
 

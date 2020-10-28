@@ -22,11 +22,14 @@ var UserServiceSet = wire.NewSet(
 
 // IUserService user service 接口定义
 type IUserService interface {
-	SignUp(user *model.SignUpParam) (*model.UserDto, error)
+	// SignUp 注册
+	SignUp(signUp *model.SignUpParam) (*model.UserDto, error)
+	// SignIn 登陆
+	SignIn(signIn *model.SignInParam) error
 	Delete(int64) bool
 	Update(user *model.UserDto) error
-	SelectById(id int64) (*model.UserDto, error)
-	SlectByName(userName string) (*model.UserDto, error)
+	SelectByID(id int64) (*model.UserDto, error)
+	SelectByName(userName string) (*model.UserDto, error)
 }
 
 type UserService struct {

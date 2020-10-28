@@ -18,7 +18,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var lg *zap.SugaredLogger
+var lg *zap.Logger
 
 // Init 初始化Logger
 func Init(cfg *conf.Config) (err error) {
@@ -37,9 +37,19 @@ func Init(cfg *conf.Config) (err error) {
 		fmt.Println("zap init failed:", err)
 		return
 	}
-	core = zapcore.NewCore(encoder, writeSyncer, l)
-	lg = zap.New(core, zap.AddCaller()).Sugar()
-	lg.Info("init log success")
+	if cfg.Mode == "dev" {
+		// 进入开发模式，日志输出到终端
+		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
+		core = zapcore.NewTee(
+			zapcore.NewCore(encoder, writeSyncer, l),
+			zapcore.NewCore(consoleEncoder, zapcore.Lock(os.Stdout), zapcore.DebugLevel),
+		)
+	} else {
+		core = zapcore.NewCore(encoder, writeSyncer, l)
+	}
+	lg = zap.New(core, zap.AddCaller())
+	zap.ReplaceGlobals(lg)
+	zap.L().Info("init logger success")
 	return
 }
 
@@ -133,32 +143,4 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 		}()
 		c.Next()
 	}
-}
-
-func Debug(args ...interface{}) {
-	lg.Debug(args)
-}
-
-func Info(args ...interface{}) {
-	lg.Info(args)
-}
-
-func Warn(args ...interface{}) {
-	lg.Warn(args)
-}
-
-func Error(args ...interface{}) {
-	lg.Error(args)
-}
-
-func DPanic(args ...interface{}) {
-	lg.DPanic(args)
-}
-
-func Panic(args ...interface{}) {
-	lg.Panic(args)
-}
-
-func Fatal(args ...interface{}) {
-	lg.Fatal(args)
 }

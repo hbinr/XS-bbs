@@ -20,6 +20,7 @@ func NewUseController(e *gin.Engine, us service.IUserService) (*UserController, 
 	g.Use(middleware.JWT) // 设置user私有中间件
 	{
 		g.POST("/signup", user.SignUp)
+		g.POST("/signin", user.SignIn)
 		g.GET("/get", user.Get)
 		g.GET("/delete", user.Delete)
 	}

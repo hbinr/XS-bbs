@@ -4,9 +4,9 @@ import (
 	"database/sql"
 	"os"
 
+	"go.uber.org/zap"
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/pkg/conf"
-	"xs.bbs/pkg/log"
 
 	"gorm.io/gorm/schema"
 
@@ -35,12 +35,12 @@ func Init(cfg *conf.Config) *gorm.DB {
 	}
 	gormConfig := config(cfg.LogMode)
 	if db, err = gorm.Open(mysql.New(mysqlConfig), gormConfig); err != nil {
-		log.Error("opens database failed", err)
+		zap.L().Error("opens database failed", zap.Error(err))
 		return nil
 	}
 
 	if sqlDB, err = db.DB(); err != nil {
-		log.Error("db.DB() failed", err)
+		zap.L().Error("db.DB() failed", zap.Error(err))
 		return nil
 	}
 	gormDBTables(db)
@@ -53,10 +53,10 @@ func Init(cfg *conf.Config) *gorm.DB {
 func gormDBTables(db *gorm.DB) {
 	err := db.AutoMigrate(&model.User{})
 	if err != nil {
-		log.Error("register table failed", "err", err)
+		zap.L().Error("register table failed", zap.Error(err))
 		os.Exit(0)
 	}
-	log.Info("register table success")
+	zap.L().Info("register table success")
 }
 
 // config 根据配置决定是否开启日志

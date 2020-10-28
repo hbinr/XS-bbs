@@ -3,54 +3,71 @@ package dao
 import (
 	"errors"
 
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"xs.bbs/internal/pkg/constant/e"
-	"xs.bbs/pkg/log"
 )
 
-func (r *UserDao) Insert(user *UserModel) (err error) {
-	return r.DB.Create(&user).Error
+// Insert 新增用户
+func (u *UserDao) Insert(user *UserModel) (err error) {
+	return u.DB.Create(&user).Error
 }
 
-func (r *UserDao) Delete(userID int64) bool {
-	return r.DB.Where("user_id = ?", userID).Delete(&UserModel{}).RowsAffected > 0
+// Delete 根据用户ID删除用户，软删除
+func (u *UserDao) Delete(userID int64) bool {
+	return u.DB.Where("user_id = ?", userID).Delete(&UserModel{}).RowsAffected > 0
 }
 
-func (r *UserDao) Update(user *UserModel) error {
-	return r.DB.Where("user_id = ?").Updates(&user).Error
+// Update 根据用户ID修改用户
+func (u *UserDao) Update(user *UserModel) error {
+	return u.DB.Where("user_id = ?").Updates(&user).Error
 }
 
-func (r *UserDao) SlectByName(userName string) (*UserModel, error) {
+// SelectByName 根据用户名查询用户
+func (u *UserDao) SelectByName(userName string) (*UserModel, error) {
 	var user UserModel
-	if err := r.DB.Where("username = ?", userName).Find(&user).Error; err != nil {
+	if err := u.DB.Where("username = ?", userName).Find(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
 }
 
-func (r *UserDao) SelectById(userID int64) (*UserModel, error) {
+// SelectByID 根据用户ID查询用户
+func (u *UserDao) SelectByID(userID int64) (*UserModel, error) {
 	var (
 		user UserModel
 		err  error
 	)
-	if err = r.DB.Where("user_id = ?", userID).First(&user).Error; err != nil {
+	if err = u.DB.Where("user_id = ?", userID).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			log.Error("userDao.SelectById", err)
-			return nil, errors.New(e.GetMsg(e.ERROR_NOT_EXIST_USER))
+			zap.L().Error("userDao.SelectByID", zap.Error(err))
+			return nil, errors.New(e.ERROR_NOT_EXIST_USER.Msg())
 		}
 		return nil, err
 	}
 	return &user, nil
 }
 
-// CheckUserExist 根据userName检查用户是否存在
-func (r *UserDao) CheckUserExist(userName string) error {
+// CheckUserByUserName 根据userName检查用户是否存在
+func (u *UserDao) CheckUserByUserName(userName string) error {
 	var count int64
-	if err := r.DB.Model(&UserModel{}).Where("username = ?", userName).Count(&count).Error; err != nil {
+	if err := u.DB.Model(&UserModel{}).Where("username = ?", userName).Count(&count).Error; err != nil {
 		return err
 	}
 	if count > 0 {
-		return errors.New(e.GetMsg(e.ERROR_EXIST_USER))
+		return errors.New(e.ERROR_EXIST_USER.Msg())
+	}
+	return nil
+}
+
+// CheckUserByEmail 通过email检查用户
+func (u *UserDao) CheckUserByEmail(email string) error {
+	var count int64
+	if err := u.DB.Model(&UserModel{}).Where("email = ?", email).Count(&count).Error; err != nil {
+		return err
+	}
+	if count > 0 {
+		return errors.New(e.ERROR_EXIST_EMAIL.Msg())
 	}
 	return nil
 }

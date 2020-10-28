@@ -8,3 +8,9 @@ type SignUpParam struct {
 	Nickname   string `json:"nickname" form:"nickname" v:"nickname@required#请输入中文名"`                                  // 中文名
 	Email      string `json:"email" form:"email" v:"email@required|email#请输入邮箱|邮箱不合法"`                                // 邮箱
 }
+
+// SignInParam 用户注册参数
+type SignInParam struct {
+	Username string `json:"username" form:"username" v:"username@required#请输入用户名"` // 用户名
+	Password string `json:"password" form:"password" v:"password@required#请输入密码"`  // 密码
+}
