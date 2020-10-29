@@ -34,9 +34,9 @@ func InitEngine(c *conf.Config) (*gin.Engine, error) {
 	// 设置公共中间件
 	r.Use(
 		middleware.GinLogger(),       // zap logger中间件
-		middleware.GinRecovery(true)) // zap recovery中间件
-	r.Group("/api")
-	r.GET("/ping", func(c *gin.Context) {
+		middleware.GinRecovery(true), // zap recovery中间件
+	)
+	r.GET("/ping", middleware.JWTAuth(), func(c *gin.Context) {
 		c.String(http.StatusOK, "ping success")
 	})
 	return r, nil

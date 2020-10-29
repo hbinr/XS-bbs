@@ -3,7 +3,6 @@ package controller
 import (
 	"errors"
 
-	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
@@ -33,11 +32,11 @@ func (u *UserController) SignUp(c *gin.Context) {
 	}
 
 	if uDto, err = u.userService.SignUp(&uParam); err != nil {
-		if errors.Is(err, dao.ErrUserExist) {
+		if errors.Is(err, e.ErrUserExist) {
 			ginx.ResponseError(c, e.CodeUserExist)
 			return
 		}
-		if errors.Is(err, dao.ErrEmailExist) {
+		if errors.Is(err, e.ErrEmailExist) {
 			ginx.ResponseError(c, e.CodeEmailExist)
 			return
 		}
@@ -61,17 +60,22 @@ func (u *UserController) SignIn(c *gin.Context) {
 	var (
 		err       error
 		signParam model.SignInParam
+		token     string
 	)
 	if errStr := ginx.BindAndValid(c, &signParam); errStr != "" {
 		ginx.ResponseErrorWithMsg(c, e.CodeError, errStr)
 		return
 	}
 
-	if err = u.userService.SignIn(&signParam); err != nil {
+	if token, err = u.userService.SignIn(&signParam); err != nil {
+		if errors.Is(err, e.ErrUserNotExist) {
+			ginx.ResponseError(c, e.CodeUserNotExist)
+			return
+		}
 		ginx.ResponseError(c, e.CodeWrongUserNameOrPassword)
 		return
 	}
-	ginx.ResponseSuccess(c, nil)
+	ginx.ResponseSuccess(c, token)
 }
 
 // Get godoc

@@ -1,7 +1,8 @@
 package key
 
 const (
-	MD5Solt       = "xiangshouduan.xs.bbs"
+	MySecret      = "xiangshouduan.xs.bbs"
 	ValidatorKey  = "ValidatorKey"
 	TranslatorKey = "TranslatorKey"
+	CtxUserIDKey  = "userID"
 )

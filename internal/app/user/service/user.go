@@ -4,6 +4,7 @@ import (
 	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/pkg/tool/hash"
+	"xs.bbs/pkg/tool/jwt"
 	"xs.bbs/pkg/tool/snowflake"
 
 	"github.com/gogf/gf/util/gconv"
@@ -35,19 +36,18 @@ func (u *UserService) SignUp(param *model.SignUpParam) (dto *model.UserDto, err 
 }
 
 // SignIn 登陆
-func (u *UserService) SignIn(signIn *model.SignInParam) (err error) {
+func (u *UserService) SignIn(signIn *model.SignInParam) (token string, err error) {
 	var user *model.User
-
-	if err = u.Dao.CheckUserByUserName(signIn.Username); err == nil {
-		return
-	}
+	// 获取用户信息
 	if user, err = u.Dao.SelectByName(signIn.Username); err != nil {
 		return
 	}
+	// 验证密码
 	if user.Password != hash.MD5String(signIn.Password) {
 		return
 	}
-	return
+	// 生成token
+	return jwt.GenToken(user.UserID)
 }
 
 // Delete 根据用户ID删除用户
