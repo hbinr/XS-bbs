@@ -18,8 +18,8 @@ type Response struct {
 // ResponseSuccess 响应成功
 func ResponseSuccess(c *gin.Context, data interface{}) {
 	c.JSON(http.StatusOK, &Response{
-		Code: e.CODE_SUCCESS,
-		Msg:  e.CODE_SUCCESS.Msg(),
+		Code: e.CodeSuccess,
+		Msg:  e.CodeSuccess.Msg(),
 		Data: data,
 	})
 }

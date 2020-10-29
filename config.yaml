@@ -9,7 +9,7 @@ system:
 log:
   prefix: "[xs-bbs]"
   level: "debug"
-  filename: "../log/xs-bbs.log"
+  filename: "../logs/xs-bbs.log"
   max_size: 200
   max_age: 30
   max_backups: 7

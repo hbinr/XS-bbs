@@ -9,9 +9,9 @@ import (
 )
 
 var (
-	ErrUserExist    = errors.New(e.CODE_USER_EXIST.Msg())
-	ErrUserNotExist = errors.New(e.CODE_USER_NOT_EXIST.Msg())
-	ErrEmailExist   = errors.New(e.CODE_EMAIL_EXIST.Msg())
+	ErrUserExist    = errors.New(e.CodeUserExist.Msg())
+	ErrUserNotExist = errors.New(e.CodeUserNotExist.Msg())
+	ErrEmailExist   = errors.New(e.CodeEmailExist.Msg())
 )
 
 // Insert 新增用户

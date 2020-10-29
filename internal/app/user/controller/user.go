@@ -28,20 +28,20 @@ func (u *UserController) SignUp(c *gin.Context) {
 		uDto   *model.UserDto
 	)
 	if errStr := ginx.BindAndValid(c, &uParam); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CODE_ERROR, errStr)
+		ginx.ResponseErrorWithMsg(c, e.CodeError, errStr)
 		return
 	}
 
 	if uDto, err = u.userService.SignUp(&uParam); err != nil {
 		if errors.Is(err, dao.ErrUserExist) {
-			ginx.ResponseError(c, e.CODE_USER_EXIST)
+			ginx.ResponseError(c, e.CodeUserExist)
 			return
 		}
 		if errors.Is(err, dao.ErrEmailExist) {
-			ginx.ResponseError(c, e.CODE_EMAIL_EXIST)
+			ginx.ResponseError(c, e.CodeEmailExist)
 			return
 		}
-		ginx.ResponseError(c, e.CODE_ERROR)
+		ginx.ResponseError(c, e.CodeError)
 		return
 	}
 	ginx.ResponseSuccess(c, uDto)
@@ -63,12 +63,12 @@ func (u *UserController) SignIn(c *gin.Context) {
 		signParam model.SignInParam
 	)
 	if errStr := ginx.BindAndValid(c, &signParam); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CODE_ERROR, errStr)
+		ginx.ResponseErrorWithMsg(c, e.CodeError, errStr)
 		return
 	}
 
 	if err = u.userService.SignIn(&signParam); err != nil {
-		ginx.ResponseError(c, e.CODE_WRONG_USERNAME_OR_PASSWORD)
+		ginx.ResponseError(c, e.CodeWrongUserNameOrPassword)
 		return
 	}
 	ginx.ResponseSuccess(c, nil)
@@ -92,12 +92,12 @@ func (u *UserController) Get(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.ResponseError(c, e.CODE_INVALID_PARAMS)
+		ginx.ResponseError(c, e.CodeInvalidParams)
 		return
 	}
 
 	if uDto, err = u.userService.SelectByID(int64(userID)); err != nil {
-		ginx.ResponseError(c, e.CODE_ERROR)
+		ginx.ResponseError(c, e.CodeError)
 		return
 	}
 	ginx.ResponseSuccess(c, uDto)
@@ -120,12 +120,12 @@ func (u *UserController) Delete(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.ResponseError(c, e.CODE_INVALID_PARAMS)
+		ginx.ResponseError(c, e.CodeInvalidParams)
 		return
 	}
 
 	if !u.userService.Delete(int64(userID)) {
-		ginx.ResponseError(c, e.CODE_ERROR)
+		ginx.ResponseError(c, e.CodeError)
 		return
 	}
 	ginx.ResponseSuccess(c, nil)

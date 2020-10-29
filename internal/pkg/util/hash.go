@@ -10,6 +10,6 @@ import (
 // EncryptPassword 密码加密
 func EncryptPassword(oPassword string) string {
 	h := md5.New()
-	h.Write([]byte(key.MD5_SOLT))
+	h.Write([]byte(key.MD5Solt))
 	return hex.EncodeToString(h.Sum([]byte(oPassword)))
 }
