@@ -8,7 +8,7 @@ import (
 
 // GetCommunityList 获取所有文章标签
 func (a *CommunityController) GetCommunityList(c *gin.Context) {
-	resList, err := a.communityService.shequ()
+	resList, err := a.communityService.GetCommunityList()
 	if err != nil {
 		ginx.ResponseError(c, e.CodeError)
 		return
