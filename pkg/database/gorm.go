@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"go.uber.org/zap"
-	"xs.bbs/internal/app/user/model"
+	"xs.bbs/internal/app"
 	"xs.bbs/pkg/conf"
 
 	"gorm.io/gorm/schema"
@@ -51,7 +51,7 @@ func Init(cfg *conf.Config) *gorm.DB {
 
 // gormDBTables 注册数据库表专用
 func gormDBTables(db *gorm.DB) {
-	err := db.AutoMigrate(&model.User{})
+	err := db.AutoMigrate(app.Models...)
 	if err != nil {
 		zap.L().Error("register table failed", zap.Error(err))
 		os.Exit(0)

@@ -21,3 +21,16 @@ func main() {
 	}
 	webApp.Start()
 }
+
+func Init() {
+	// "xs.bbs/pkg/log"
+	// "xs.bbs/pkg/tool/snowflake"
+	// err = log.Init(config)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// err = snowflake.Init(config)
+	// if err != nil {
+	// 	return nil, err
+	// }
+}

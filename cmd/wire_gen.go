@@ -6,8 +6,10 @@
 package main
 
 import (
-	"github.com/google/wire"
 	"xs.bbs/internal/app"
+	controller2 "xs.bbs/internal/app/community/controller"
+	dao2 "xs.bbs/internal/app/community/dao"
+	service2 "xs.bbs/internal/app/community/service"
 	"xs.bbs/internal/app/user/controller"
 	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/service"
@@ -24,10 +26,12 @@ func initWebApp() (*app.WebApp, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = log.Init(config); err != nil {
+	err = log.Init(config)
+	if err != nil {
 		return nil, err
 	}
-	if err = snowflake.Init(config); err != nil {
+	err = snowflake.Init(config)
+	if err != nil {
 		return nil, err
 	}
 	engine, err := app.InitEngine(config)
@@ -41,18 +45,25 @@ func initWebApp() (*app.WebApp, error) {
 	userService := &service.UserService{
 		Dao: userDao,
 	}
-	userController, err := controller.NewUseController(engine, userService)
+	userController, err := controller.NewUserController(engine, userService)
+	if err != nil {
+		return nil, err
+	}
+	communityDao := &dao2.CommunityDao{
+		DB: db,
+	}
+	communityService := &service2.CommunityService{
+		Dao: communityDao,
+	}
+	communityController, err := controller2.NewCommunityController(engine, communityService)
 	if err != nil {
 		return nil, err
 	}
 	webApp := &app.WebApp{
-		Engine:   engine,
-		Config:   config,
-		UserCtrl: userController,
+		Engine:        engine,
+		Config:        config,
+		UserCtrl:      userController,
+		CommunityCtrl: communityController,
 	}
 	return webApp, nil
 }
-
-// wire.go:
-
-var controllerSet = wire.NewSet(controller.NewUseController)

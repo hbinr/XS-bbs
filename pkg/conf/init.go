@@ -33,7 +33,19 @@ func Init() (*Config, error) {
 	if err = v.ReadInConfig(); err != nil {
 		panic(fmt.Sprintf("Fatal error conf file: %s", err))
 	}
+	// 监控config改变
+	watchConfig(conf, v)
 
+	if err := v.Unmarshal(&conf); err != nil {
+		fmt.Println("v.Unmarshal failed,err:", err)
+		return &conf, nil
+	}
+
+	fmt.Println("Config sets success，Conf:", &conf)
+	return &conf, nil
+}
+
+func watchConfig(conf Config, v *viper.Viper) {
 	v.WatchConfig()
 
 	v.OnConfigChange(func(e fsnotify.Event) {
@@ -43,10 +55,4 @@ func Init() (*Config, error) {
 			return
 		}
 	})
-	if err := v.Unmarshal(&conf); err != nil {
-		fmt.Println("v.Unmarshal failed,err:", err)
-		return &conf, nil
-	}
-	fmt.Println("Config sets success，Conf:", &conf)
-	return &conf, nil
 }
