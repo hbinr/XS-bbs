@@ -13,10 +13,11 @@ type MyClaims struct {
 	jwt.StandardClaims
 }
 
-const TokenExpireDuration = time.Minute * 10
+const TokenExpireDuration = time.Hour * 24
 
 // GenToken 生成token
 func GenToken(userID int64) (string, error) {
+
 	// 创建一个我们自己的声明
 	c := &MyClaims{
 		userID,
@@ -40,7 +41,7 @@ func ParseToken(tokenString string) (claims *MyClaims, err error) {
 	// 这行分配内存地址的代码一定要写，否则在赋值时会提示invalid vlaue
 	claims = new(MyClaims)
 	token, err = jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (i interface{}, err error) {
-		return key.MySecret, nil
+		return []byte(key.MySecret), nil
 	})
 	if err != nil {
 		return

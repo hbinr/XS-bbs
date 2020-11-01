@@ -19,6 +19,6 @@ type CommunityDao struct {
 
 // ICommunityDao 文章标签接口
 type ICommunityDao interface {
-	// GetCommunityList 获取所有文章标签
 	GetCommunityList() ([]model.Community, error)
+	GetCommunityDetailByID(int64) (*model.Community, error)
 }

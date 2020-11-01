@@ -1,16 +1,34 @@
 package dao
 
 import (
+	"errors"
+
+	"xs.bbs/internal/pkg/constant/e"
+
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"xs.bbs/internal/app/community/model"
 )
 
-// GetCommunityList 获取所有文章标签
-func (d *CommunityDao) GetCommunityList() ([]model.Community, error) {
-	var resList []model.Community
-	if err := d.DB.Find(&resList).Error; err != nil {
+func (c *CommunityDao) GetCommunityList() (resList []model.Community, err error) {
+	if err = c.DB.Find(&resList).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			zap.L().Error("Dao.GetCommunityList no data", zap.Error(err))
+			err = gorm.ErrRecordNotFound
+		}
 		zap.L().Error("Dao.GetCommunityList failed", zap.Error(err))
-		return nil, err
 	}
-	return resList, nil
+	return resList, err
+}
+
+func (c *CommunityDao) GetCommunityDetailByID(ID int64) (res *model.Community, err error) {
+	res = new(model.Community)
+	if err = c.DB.Where("community_id", ID).First(&res).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			zap.L().Error("Dao.GetCommunityList no data", zap.Error(err))
+			err = e.ErrInvalidID
+		}
+		zap.L().Error("Dao.GetCommunityList failed", zap.Error(err))
+	}
+	return res, err
 }

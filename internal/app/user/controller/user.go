@@ -90,7 +90,7 @@ func (u *UserController) SignIn(c *gin.Context) {
 // @Router /user/Get [get]
 func (u *UserController) Get(c *gin.Context) {
 	var (
-		userID int
+		userID int64
 		err    error
 		uDto   *model.UserDto
 	)
@@ -100,7 +100,7 @@ func (u *UserController) Get(c *gin.Context) {
 		return
 	}
 
-	if uDto, err = u.userService.SelectByID(int64(userID)); err != nil {
+	if uDto, err = u.userService.SelectByID(userID); err != nil {
 		ginx.ResponseError(c, e.CodeError)
 		return
 	}
@@ -119,7 +119,7 @@ func (u *UserController) Get(c *gin.Context) {
 // @Router /user/delete [get]
 func (u *UserController) Delete(c *gin.Context) {
 	var (
-		userID int
+		userID int64
 		err    error
 	)
 
@@ -128,7 +128,7 @@ func (u *UserController) Delete(c *gin.Context) {
 		return
 	}
 
-	if !u.userService.Delete(int64(userID)) {
+	if !u.userService.Delete(userID) {
 		ginx.ResponseError(c, e.CodeError)
 		return
 	}

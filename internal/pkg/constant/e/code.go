@@ -12,6 +12,7 @@ const (
 	CodeValidateParamsErr ResCode = 10001
 	CodeInvalidToken      ResCode = 10002
 	CodeNeedLogin         ResCode = 10003
+	CodeInvalidID         ResCode = 10004
 
 	CodeUserNotExist            ResCode = 20001
 	CodeUserExist               ResCode = 20002

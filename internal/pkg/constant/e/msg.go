@@ -9,6 +9,7 @@ var codeMsgMap = map[ResCode]string{
 	CodeValidateParamsErr: "参数校验错误",   // 10001
 	CodeInvalidToken:      "无效的token", // 10002
 	CodeNeedLogin:         "请先登陆",     // 10003
+	CodeInvalidID:         "无效的ID",    // 10004
 
 	CodeUserNotExist:            "该用户不存在",   // 20001
 	CodeUserExist:               "该用户已存在",   // 20002

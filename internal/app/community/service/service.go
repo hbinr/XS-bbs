@@ -22,4 +22,6 @@ type CommunityService struct {
 type ICommunityService interface {
 	// GetCommunityList 获取所有文章标签
 	GetCommunityList() ([]model.CommunityDto, error)
+	// GetCommunityDetailByID 根据社区id获取社区详情
+	GetCommunityDetailByID(int64) (*model.CommunityDto, error)
 }
