@@ -10,23 +10,23 @@ import (
 
 // Insert 新增用户
 func (u *UserDao) Insert(user *UserModel) (err error) {
-	return u.DB.Create(&user).Error
+	return u.db.Create(&user).Error
 }
 
 // Delete 根据用户ID删除用户，软删除
 func (u *UserDao) Delete(userID int64) bool {
-	return u.DB.Where("user_id = ?", userID).Delete(&UserModel{}).RowsAffected > 0
+	return u.db.Where("user_id = ?", userID).Delete(&UserModel{}).RowsAffected > 0
 }
 
 // Update 根据用户ID修改用户
 func (u *UserDao) Update(user *UserModel) error {
-	return u.DB.Where("user_id = ?").Updates(&user).Error
+	return u.db.Where("user_id = ?").Updates(&user).Error
 }
 
 // SelectByName 根据用户名查询用户
 func (u *UserDao) SelectByName(userName string) (*UserModel, error) {
 	var user UserModel
-	if err := u.DB.Where("username = ?", userName).Find(&user).Error; err != nil {
+	if err := u.db.Where("username = ?", userName).Find(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil
@@ -38,7 +38,7 @@ func (u *UserDao) SelectByID(userID int64) (*UserModel, error) {
 		user UserModel
 		err  error
 	)
-	if err = u.DB.Where("user_id = ?", userID).First(&user).Error; err != nil {
+	if err = u.db.Where("user_id = ?", userID).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			zap.L().Error("userDao.SelectByID", zap.Error(err))
 			return nil, e.ErrUserNotExist
@@ -51,7 +51,7 @@ func (u *UserDao) SelectByID(userID int64) (*UserModel, error) {
 // CheckUserByUserName 根据userName检查用户是否存在
 func (u *UserDao) CheckUserByUserName(userName string) error {
 	var count int64
-	if err := u.DB.Model(&UserModel{}).Where("username = ?", userName).Count(&count).Error; err != nil {
+	if err := u.db.Model(&UserModel{}).Where("username = ?", userName).Count(&count).Error; err != nil {
 		return err
 	}
 	if count > 0 {
@@ -63,7 +63,7 @@ func (u *UserDao) CheckUserByUserName(userName string) error {
 // CheckUserByEmail 通过email检查用户
 func (u *UserDao) CheckUserByEmail(email string) error {
 	var count int64
-	if err := u.DB.Model(&UserModel{}).Where("email = ?", email).Count(&count).Error; err != nil {
+	if err := u.db.Model(&UserModel{}).Where("email = ?", email).Count(&count).Error; err != nil {
 		return err
 	}
 	if count > 0 {

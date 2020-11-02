@@ -2,24 +2,27 @@ package app
 
 import (
 	"fmt"
-	"net/http"
 
-	_ "xs.bbs/docs"
-
+	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"xs.bbs/internal/app/community"
-	communityCtrl "xs.bbs/internal/app/community/controller"
-	"xs.bbs/internal/app/user"
-	userCtrl "xs.bbs/internal/app/user/controller"
+
+	_ "xs.bbs/docs"
 	"xs.bbs/internal/pkg/middleware"
 	"xs.bbs/pkg/conf"
 
-	"github.com/gin-gonic/gin"
+	"xs.bbs/internal/app/community"
+	communityCtrl "xs.bbs/internal/app/community/controller"
+
+	"xs.bbs/internal/app/post"
+	postCtrl "xs.bbs/internal/app/post/controller"
+
+	"xs.bbs/internal/app/user"
+	userCtrl "xs.bbs/internal/app/user/controller"
 )
 
 // Models gorm AutoMigrate 初始化
-var Models = []interface{}{user.Model, community.Model}
+var Models = []interface{}{user.Model, community.Model, post.Model}
 
 // WebApp represent a web application
 type WebApp struct {
@@ -27,10 +30,11 @@ type WebApp struct {
 	Config        *conf.Config
 	UserCtrl      *userCtrl.UserController
 	CommunityCtrl *communityCtrl.CommunityController
+	PostCtrl      *postCtrl.PostController
 }
 
 // InitEngine 初始化gin
-func InitEngine(c *conf.Config) (*gin.Engine, error) {
+func InitEngine(c *conf.Config) *gin.Engine {
 	if c.Mode == gin.ReleaseMode {
 		gin.SetMode(gin.ReleaseMode) // gin设置成发布模式
 	}
@@ -43,10 +47,7 @@ func InitEngine(c *conf.Config) (*gin.Engine, error) {
 		middleware.GinLogger(),       // zap logger中间件
 		middleware.GinRecovery(true), // zap recovery中间件
 	)
-	r.GET("/ping", middleware.JWTAuth(), func(c *gin.Context) {
-		c.String(http.StatusOK, "ping success")
-	})
-	return r, nil
+	return r
 }
 
 // Start the web app

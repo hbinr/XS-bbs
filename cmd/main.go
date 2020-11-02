@@ -1,5 +1,26 @@
 package main
 
+import (
+	"fmt"
+
+	"xs.bbs/internal/app/community"
+	"xs.bbs/internal/app/post"
+
+	"xs.bbs/internal/app/user"
+
+	"xs.bbs/pkg/database"
+
+	"go.uber.org/zap"
+
+	"xs.bbs/pkg/tool/snowflake"
+
+	"xs.bbs/pkg/log"
+
+	"xs.bbs/internal/app"
+
+	"xs.bbs/pkg/conf"
+)
+
 // @title 项目标题
 // @version 0.0.1
 // @description 这是一个gin web开发脚手架
@@ -22,15 +43,32 @@ func main() {
 	webApp.Start()
 }
 
-func Init() {
-	// "xs.bbs/pkg/log"
-	// "xs.bbs/pkg/tool/snowflake"
-	// err = log.Init(config)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// err = snowflake.Init(config)
-	// if err != nil {
-	// 	return nil, err
-	// }
+func initWebApp() (webApp *app.WebApp, err error) {
+	config, err := conf.Init()
+	if err != nil {
+		fmt.Println("conf.Init failed,err", err)
+		return
+	}
+	if err = log.Init(config); err != nil {
+		fmt.Println("log.Init failed,err", err)
+		return
+	}
+	if err = snowflake.Init(config); err != nil {
+		zap.L().Error("snowflake.Init failed", zap.Error(err))
+		return
+	}
+	db, err := database.Init(config)
+	if err != nil {
+		zap.L().Error("database.Init failed", zap.Error(err))
+		return
+	}
+	engine := app.InitEngine(config)
+	webApp = &app.WebApp{
+		Engine:        engine,
+		Config:        config,
+		UserCtrl:      user.Init(engine, db),
+		CommunityCtrl: community.Init(engine, db),
+		PostCtrl:      post.Init(engine, db),
+	}
+	return
 }

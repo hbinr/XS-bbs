@@ -18,13 +18,11 @@ import (
 )
 
 var (
-	db    *gorm.DB
 	sqlDB *sql.DB
 )
 
 //Init 初始化MySQL
-func Init(cfg *conf.Config) *gorm.DB {
-	var err error
+func Init(cfg *conf.Config) (db *gorm.DB, err error) {
 	mysqlConfig := mysql.Config{
 		DSN:                       cfg.DSN, // DSN data source name
 		DefaultStringSize:         191,     // string 类型字段的默认长度
@@ -36,17 +34,17 @@ func Init(cfg *conf.Config) *gorm.DB {
 	gormConfig := config(cfg.LogMode)
 	if db, err = gorm.Open(mysql.New(mysqlConfig), gormConfig); err != nil {
 		zap.L().Error("opens database failed", zap.Error(err))
-		return nil
+		return
 	}
 
 	if sqlDB, err = db.DB(); err != nil {
-		zap.L().Error("db.DB() failed", zap.Error(err))
-		return nil
+		zap.L().Error("db.db() failed", zap.Error(err))
+		return
 	}
 	gormDBTables(db)
 	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
-	return db
+	return
 }
 
 // gormDBTables 注册数据库表专用

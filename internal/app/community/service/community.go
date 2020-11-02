@@ -8,13 +8,13 @@ import (
 )
 
 // GetCommunityList 获取所有文章标签
-func (s *CommunityService) GetCommunityList() (resList []model.CommunityDto, err error) {
+func (s *communityService) GetCommunityList() (resList []CommunityDto, err error) {
 	var communityList []model.Community
-	communityList, err = s.Dao.GetCommunityList()
+	communityList, err = s.dao.GetCommunityList()
 	for _, c := range communityList {
-		var dto model.CommunityDto
+		var dto CommunityDto
 		if err = gconv.Struct(c, &dto); err != nil {
-			zap.L().Error("CommunityService.GetCommunityList->gconv.Struct failed", zap.Error(err))
+			zap.L().Error("communityService.GetCommunityList->gconv.Struct failed", zap.Error(err))
 			return nil, err
 		}
 		resList = append(resList, dto)
@@ -23,10 +23,10 @@ func (s *CommunityService) GetCommunityList() (resList []model.CommunityDto, err
 }
 
 // GetCommunityDetailByID 根据社区id获取社区详情
-func (s *CommunityService) GetCommunityDetailByID(ID int64) (commDto *model.CommunityDto, err error) {
+func (s *communityService) GetCommunityDetailByID(ID int64) (commDto *CommunityDto, err error) {
 	var commuModel *model.Community
 
-	if commuModel, err = s.Dao.GetCommunityDetailByID(ID); err != nil {
+	if commuModel, err = s.dao.GetCommunityDetailByID(ID); err != nil {
 		return nil, err
 	}
 	if err = gconv.Struct(commuModel, &commDto); err != nil {

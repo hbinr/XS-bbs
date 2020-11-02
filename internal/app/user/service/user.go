@@ -11,12 +11,12 @@ import (
 )
 
 // SignUp .
-func (u *UserService) SignUp(param *model.SignUpParam) (dto *model.UserDto, err error) {
+func (u *userService) SignUp(param *model.SignUpParam) (dto *UserDto, err error) {
 	var uModel dao.UserModel
-	if err = u.Dao.CheckUserByUserName(param.Username); err != nil {
+	if err = u.dao.CheckUserByUserName(param.Username); err != nil {
 		return
 	}
-	if err = u.Dao.CheckUserByEmail(param.Email); err != nil {
+	if err = u.dao.CheckUserByEmail(param.Email); err != nil {
 		return
 	}
 	if err = gconv.Struct(param, &uModel); err != nil {
@@ -25,7 +25,7 @@ func (u *UserService) SignUp(param *model.SignUpParam) (dto *model.UserDto, err 
 	uModel.UserID = snowflake.GenID()
 	// 密码加密
 	uModel.Password = hash.MD5String(param.Password)
-	if err = u.Dao.Insert(&uModel); err != nil {
+	if err = u.dao.Insert(&uModel); err != nil {
 		return
 	}
 
@@ -36,10 +36,10 @@ func (u *UserService) SignUp(param *model.SignUpParam) (dto *model.UserDto, err 
 }
 
 // SignIn 登陆
-func (u *UserService) SignIn(signIn *model.SignInParam) (token string, err error) {
+func (u *userService) SignIn(signIn *model.SignInParam) (token string, err error) {
 	var user *model.User
 	// 获取用户信息
-	if user, err = u.Dao.SelectByName(signIn.Username); err != nil {
+	if user, err = u.dao.SelectByName(signIn.Username); err != nil {
 		return
 	}
 	// 验证密码
@@ -51,26 +51,26 @@ func (u *UserService) SignIn(signIn *model.SignInParam) (token string, err error
 }
 
 // Delete 根据用户ID删除用户
-func (u *UserService) Delete(userID int64) bool {
-	return u.Dao.Delete(userID)
+func (u *userService) Delete(userID int64) bool {
+	return u.dao.Delete(userID)
 }
 
 // Update 根据用户ID修改用户
-func (u *UserService) Update(user *model.UserDto) error {
+func (u *userService) Update(user *UserDto) error {
 	var uModel model.User
 	if err := gconv.Struct(user, &uModel); err != nil {
 		return err
 	}
-	return u.Dao.Update(&uModel)
+	return u.dao.Update(&uModel)
 }
 
 // SelectByName 根据用户名查询用户
-func (u *UserService) SelectByName(userName string) (*model.UserDto, error) {
-	uModel, err := u.Dao.SelectByName(userName)
+func (u *userService) SelectByName(userName string) (*UserDto, error) {
+	uModel, err := u.dao.SelectByName(userName)
 	if err != nil {
 		return nil, err
 	}
-	var uDto model.UserDto
+	var uDto UserDto
 	if err = gconv.Struct(uModel, &uDto); err != nil {
 		return nil, err
 	}
@@ -78,12 +78,12 @@ func (u *UserService) SelectByName(userName string) (*model.UserDto, error) {
 }
 
 // SelectByID 根据用户ID查询用户
-func (u *UserService) SelectByID(userID int64) (*model.UserDto, error) {
-	uModel, err := u.Dao.SelectByID(userID)
+func (u *userService) SelectByID(userID int64) (*UserDto, error) {
+	uModel, err := u.dao.SelectByID(userID)
 	if err != nil {
 		return nil, err
 	}
-	var uDto model.UserDto
+	var uDto UserDto
 	if err = gconv.Struct(uModel, &uDto); err != nil {
 		return nil, err
 	}

@@ -2,19 +2,18 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/wire"
 	"xs.bbs/internal/app/user/service"
 )
 
-var UserControllerSet = wire.NewSet(
-	NewUserController)
+//var UserControllerSet = wire.NewSet(
+//	NewUserController)
 
 type UserController struct {
 	engine      *gin.Engine
 	userService service.IUserService
 }
 
-func NewUserController(e *gin.Engine, us service.IUserService) (*UserController, error) {
+func NewUserController(e *gin.Engine, us service.IUserService) *UserController {
 	user := &UserController{
 		engine:      e,
 		userService: us,
@@ -26,5 +25,5 @@ func NewUserController(e *gin.Engine, us service.IUserService) (*UserController,
 		g.GET("/get", user.Get)
 		g.GET("/delete", user.Delete)
 	}
-	return user, nil
+	return user
 }
