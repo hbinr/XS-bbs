@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"xs.bbs/internal/app/post/model"
+	"xs.bbs/internal/pkg/common"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
 )
@@ -14,7 +15,7 @@ func (p *PostController) CreatePostHandle(c *gin.Context) {
 		postParam model.PostParam
 	)
 	if errStr := ginx.BindAndValid(c, &postParam); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CodeError, errStr)
+		ginx.ResponseErrorWithMsg(c, e.CodeInvalidParams, errStr)
 		return
 	}
 	if userID, err = ginx.GetCurrentUserID(c); err != nil {
@@ -45,4 +46,28 @@ func (p *PostController) GetPostDetailHandle(c *gin.Context) {
 		return
 	}
 	ginx.ResponseSuccess(c, dto)
+}
+
+func (p *PostController) GetPostListHandle(c *gin.Context) {
+	var (
+		err      error
+		total    int64
+		pageInfo common.PageInfo
+		posts    []*model.PostDetailDto
+	)
+	if errStr := ginx.BindAndValid(c, &pageInfo); errStr != "" {
+		ginx.ResponseErrorWithMsg(c, e.CodeInvalidParams, errStr)
+		return
+	}
+	if posts, total, err = p.postService.GetPostList(&pageInfo); err != nil {
+		ginx.ResponseError(c, e.CodeError)
+		return
+	}
+	pageRes := &common.PageResult{
+		List:     posts,
+		Total:    total,
+		Page:     pageInfo.Page,
+		PageSize: pageInfo.PageSize,
+	}
+	ginx.ResponseSuccess(c, pageRes)
 }

@@ -1,8 +1,6 @@
 package ginx
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/gogf/gf/util/gvalid"
 	"go.uber.org/zap"
@@ -13,7 +11,7 @@ import (
 func BindAndValid(c *gin.Context, params interface{}) string {
 	if err := c.ShouldBind(params); err != nil {
 		zap.L().Error(e.CodeInvalidParams.Msg(), zap.Error(err))
-		return fmt.Sprintf("%s-err:%s", e.CodeInvalidParams.Msg(), err.Error())
+		return e.CodeInvalidParams.Msg()
 	}
 	if err := gvalid.CheckStruct(params, nil); err != nil {
 		zap.L().Error(e.CodeValidateParamsErr.Msg(), zap.Error(err))

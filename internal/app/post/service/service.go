@@ -6,6 +6,7 @@ import (
 	postDao "xs.bbs/internal/app/post/dao"
 	"xs.bbs/internal/app/post/model"
 	userDao "xs.bbs/internal/app/user/dao"
+	"xs.bbs/internal/pkg/common"
 )
 
 var _ IPostService = (*postService)(nil)
@@ -24,6 +25,7 @@ type (
 	IPostService interface {
 		Create(post *model.PostParam) error
 		GetPostByID(pID int64) (*model.PostDetailDto, error)
+		GetPostList(paging *common.PageInfo) ([]*model.PostDetailDto, int64, error)
 	}
 )
 
