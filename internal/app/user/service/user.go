@@ -39,7 +39,7 @@ func (u *userService) SignUp(param *model.SignUpParam) (dto *UserDto, err error)
 func (u *userService) SignIn(signIn *model.SignInParam) (token string, err error) {
 	var user *model.User
 	// 获取用户信息
-	if user, err = u.dao.SelectByName(signIn.Username); err != nil {
+	if user, err = u.dao.GetUserByName(signIn.Username); err != nil {
 		return
 	}
 	// 验证密码
@@ -66,7 +66,7 @@ func (u *userService) Update(user *UserDto) error {
 
 // SelectByName 根据用户名查询用户
 func (u *userService) SelectByName(userName string) (*UserDto, error) {
-	uModel, err := u.dao.SelectByName(userName)
+	uModel, err := u.dao.GetUserByName(userName)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +79,7 @@ func (u *userService) SelectByName(userName string) (*UserDto, error) {
 
 // SelectByID 根据用户ID查询用户
 func (u *userService) SelectByID(userID int64) (*UserDto, error) {
-	uModel, err := u.dao.SelectByID(userID)
+	uModel, err := u.dao.GetUserByID(userID)
 	if err != nil {
 		return nil, err
 	}

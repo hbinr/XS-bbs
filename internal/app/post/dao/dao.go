@@ -20,6 +20,7 @@ type (
 
 	IPostDao interface {
 		Create(post *PostModel) error
+		GetPostByID(pID int64) (*PostModel, error)
 	}
 )
 

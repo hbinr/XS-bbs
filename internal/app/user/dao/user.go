@@ -24,7 +24,7 @@ func (u *UserDao) Update(user *UserModel) error {
 }
 
 // SelectByName 根据用户名查询用户
-func (u *UserDao) SelectByName(userName string) (*UserModel, error) {
+func (u *UserDao) GetUserByName(userName string) (*UserModel, error) {
 	var user UserModel
 	if err := u.db.Where("username = ?", userName).Find(&user).Error; err != nil {
 		return nil, err
@@ -33,14 +33,14 @@ func (u *UserDao) SelectByName(userName string) (*UserModel, error) {
 }
 
 // SelectByID 根据用户ID查询用户
-func (u *UserDao) SelectByID(userID int64) (*UserModel, error) {
+func (u *UserDao) GetUserByID(userID int64) (*UserModel, error) {
 	var (
 		user UserModel
 		err  error
 	)
 	if err = u.db.Where("user_id = ?", userID).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			zap.L().Error("userDao.SelectByID", zap.Error(err))
+			zap.L().Error("userDao.GetUserByID", zap.Error(err))
 			return nil, e.ErrUserNotExist
 		}
 		return nil, err

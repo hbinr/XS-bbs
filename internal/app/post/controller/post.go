@@ -7,12 +7,11 @@ import (
 	"xs.bbs/internal/pkg/ginx"
 )
 
-func (p *PostController) Create(c *gin.Context) {
+func (p *PostController) CreatePostHandle(c *gin.Context) {
 	var (
 		err       error
 		userID    int64
 		postParam model.PostParam
-		postDto   *model.PostDto
 	)
 	if errStr := ginx.BindAndValid(c, &postParam); errStr != "" {
 		ginx.ResponseErrorWithMsg(c, e.CodeError, errStr)
@@ -23,9 +22,27 @@ func (p *PostController) Create(c *gin.Context) {
 		return
 	}
 	postParam.AuthorID = userID
-	if postDto, err = p.postService.Create(&postParam); err != nil {
+	if err = p.postService.Create(&postParam); err != nil {
 		ginx.ResponseError(c, e.CodeError)
 		return
 	}
-	ginx.ResponseSuccess(c, postDto)
+	ginx.ResponseSuccess(c, nil)
+}
+
+func (p *PostController) GetPostDetailHandle(c *gin.Context) {
+	var (
+		pID int64
+		err error
+		dto *model.PostDetailDto
+	)
+
+	if pID, err = ginx.QueryInt("postID", c); err != nil {
+		ginx.ResponseError(c, e.CodeInvalidParams)
+		return
+	}
+	if dto, err = p.postService.GetPostByID(pID); err != nil {
+		ginx.ResponseError(c, e.CodeError)
+		return
+	}
+	ginx.ResponseSuccess(c, dto)
 }
