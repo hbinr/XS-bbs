@@ -1,6 +1,8 @@
 package service
 
 import (
+	"strconv"
+
 	"github.com/gogf/gf/util/gconv"
 	"go.uber.org/zap"
 	community "xs.bbs/internal/app/community/model"
@@ -111,4 +113,12 @@ func Convert2PostDetailDto(userM *user.User, communityM *community.Community,
 	}
 	dto.CreatedAt = util.TimeFormat(postM.CreatedAt, util.FMT_DATE_TIME)
 	return
+}
+
+func (p *postService) Vote(userID int64, vote *model.PostVoteParam) (err error) {
+	zap.L().Debug("Vote",
+		zap.Int64("userID", userID),
+		zap.Int64("postID", vote.PostID),
+		zap.Int8("direction", vote.Direction))
+	return p.postDao.Vote(strconv.Itoa(int(userID)), strconv.Itoa(int(vote.PostID)), float64(vote.Direction))
 }

@@ -23,6 +23,7 @@ func NewPostController(e *gin.Engine, us service.IPostService) *PostController {
 		g.POST("/create", post.CreatePostHandle)
 		g.GET("/get", post.GetPostDetailHandle)
 		g.POST("/list", post.GetPostListHandle)
+		g.POST("/vote", post.VoteForPost)
 	}
 	return post
 }

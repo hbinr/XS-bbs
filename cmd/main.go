@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	"xs.bbs/pkg/cache"
+
 	"xs.bbs/internal/app/community"
 	"xs.bbs/internal/app/post"
 
@@ -62,13 +64,18 @@ func initWebApp() (webApp *app.WebApp, err error) {
 		zap.L().Error("database.Init failed", zap.Error(err))
 		return
 	}
+	rbd, err := cache.Init(config)
+	if err != nil {
+		zap.L().Error("cache.Init failed", zap.Error(err))
+		return
+	}
 	engine := app.InitEngine(config)
 	webApp = &app.WebApp{
 		Engine:        engine,
 		Config:        config,
 		UserCtrl:      user.Init(engine, db),
 		CommunityCtrl: community.Init(engine, db),
-		PostCtrl:      post.Init(engine, db),
+		PostCtrl:      post.Init(engine, db, rbd),
 	}
 	return
 }

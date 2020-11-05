@@ -1,7 +1,34 @@
 package dao
 
+import (
+	"time"
+
+	"github.com/go-redis/redis"
+	"xs.bbs/internal/pkg/constant/key"
+	"xs.bbs/pkg/tool/snowflake"
+)
+
 func (p *postDao) Create(post *PostModel) (err error) {
-	return p.db.Create(post).Error
+	post.PostID = snowflake.GenID()
+	// 1.存到MySQL中
+	if err = p.db.Create(post).Error; err != nil {
+		return
+	}
+	// 2.存到redis中
+	pipeline := p.rdb.Pipeline()
+	// 帖子时间
+	pipeline.ZAdd(key.Redis(key.KeyPostTimeZset), redis.Z{
+		Score:  float64(time.Now().Unix()),
+		Member: post.PostID,
+	})
+
+	// 帖子分数
+	pipeline.ZAdd(key.Redis(key.KeyPostScoreZset), redis.Z{
+		Score:  float64(time.Now().Unix()),
+		Member: post.PostID,
+	})
+	_, err = pipeline.Exec()
+	return
 }
 func (p *postDao) GetPostByID(pID int64) (post *PostModel, err error) {
 	post = new(PostModel)

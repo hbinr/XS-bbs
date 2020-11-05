@@ -11,8 +11,8 @@ import (
 // Response .
 type Response struct {
 	Code e.ResCode   `json:"code"`
-	Data interface{} `json:"data"`
 	Msg  string      `json:"msg"`
+	Data interface{} `json:"data,omitempty"`
 }
 
 // ResponseSuccess 响应成功

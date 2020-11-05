@@ -12,9 +12,9 @@ import (
 var rdb *redis.Client
 
 // Init 初始化redis连接
-func Init(cfg *conf.RedisConfig) *redis.Client {
+func Init(cfg *conf.Config) (*redis.Client, error) {
 	rdb = redis.NewClient(&redis.Options{
-		Addr:         fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
+		Addr:         fmt.Sprintf("%s:%d", cfg.RedisConfig.Host, cfg.RedisConfig.Port),
 		Password:     cfg.Password, // no password set
 		DB:           cfg.DB,       // use default db
 		PoolSize:     cfg.PoolSize,
@@ -22,13 +22,9 @@ func Init(cfg *conf.RedisConfig) *redis.Client {
 	})
 	if _, err := rdb.Ping().Result(); err != nil {
 		zap.L().Error("redis ping failed", zap.Error(err))
+		return nil, err
 	}
-	return rdb
-}
-
-// RDB 获取redis客户端链接
-func RDB() *redis.Client {
-	return rdb
+	return rdb, nil
 }
 
 // Close 关闭redis clent连接资源
