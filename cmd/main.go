@@ -3,24 +3,18 @@ package main
 import (
 	"fmt"
 
-	"xs.bbs/pkg/cache"
-
-	"xs.bbs/internal/app/community"
-	"xs.bbs/internal/app/post"
-
-	"xs.bbs/internal/app/user"
-
-	"xs.bbs/pkg/database"
-
 	"go.uber.org/zap"
 
-	"xs.bbs/pkg/tool/snowflake"
-
-	"xs.bbs/pkg/log"
-
 	"xs.bbs/internal/app"
+	"xs.bbs/internal/app/community"
+	"xs.bbs/internal/app/post"
+	"xs.bbs/internal/app/user"
 
+	"xs.bbs/pkg/cache"
 	"xs.bbs/pkg/conf"
+	"xs.bbs/pkg/database"
+	"xs.bbs/pkg/log"
+	"xs.bbs/pkg/tool/snowflake"
 )
 
 // @title 项目标题

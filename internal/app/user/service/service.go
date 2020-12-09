@@ -1,7 +1,6 @@
 package service
 
 import (
-	"gorm.io/gorm"
 	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
 )
@@ -32,8 +31,8 @@ type (
 	}
 )
 
-func NewUserService(db *gorm.DB) IUserService {
+func NewUserService(dao dao.IUserDao) IUserService {
 	return &userService{
-		dao: dao.NewUserDao(db),
+		dao: dao,
 	}
 }

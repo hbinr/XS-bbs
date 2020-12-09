@@ -23,7 +23,9 @@ type (
 	IPostDao interface {
 		Create(post *PostModel) error
 		GetPostByID(pID int64) (*PostModel, error)
+		GetPostListByIDs(ids []string) ([]*PostModel, int64, error)
 		GetPostList(page, pageSize int) ([]*PostModel, int64, error)
+		// Vote 投票,数据存储于redis中
 		Vote(userID, postID string, value float64) error
 	}
 )

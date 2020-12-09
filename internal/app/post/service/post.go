@@ -58,7 +58,9 @@ func (p *postService) GetPostByID(pID int64) (dto *post.PostDetailDto, err error
 	return
 }
 
-func (p *postService) GetPostList(paging *common.PageInfo) (resList []*model.PostDetailDto, total int64, err error) {
+// GetPostListByIDs 根据post_id切片获取post列表，并按照给定的post_id顺序返回
+
+func (p *postService) GetPostListByIDs(paging *common.PageInfo) (resList []*model.PostDetailDto, total int64, err error) {
 	var (
 		postListM  []*post.Post
 		userM      *user.User
@@ -94,6 +96,7 @@ func (p *postService) GetPostList(paging *common.PageInfo) (resList []*model.Pos
 	}
 	return
 }
+
 func Convert2PostDetailDto(userM *user.User, communityM *community.Community,
 	postM *post.Post) (dto *post.PostDetailDto, err error) {
 	var (

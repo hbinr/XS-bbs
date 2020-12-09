@@ -2,8 +2,9 @@ package common
 
 // PageInfo 分页请求数据
 type PageInfo struct {
-	Page     int `json:"page" form:"page"`         // 页码
-	PageSize int `json:"pageSize" form:"pageSize"` // 每页条数
+	Page     int    `json:"page" form:"page"`         // 页码
+	PageSize int    `json:"pageSize" form:"pageSize"` // 每页条数
+	Order    string `json:"order" form:"order"`       // 排序方式
 }
 
 func (p *PageInfo) Offset() int {

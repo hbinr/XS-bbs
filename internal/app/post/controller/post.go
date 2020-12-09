@@ -50,16 +50,19 @@ func (p *PostController) GetPostDetailHandle(c *gin.Context) {
 
 func (p *PostController) GetPostListHandle(c *gin.Context) {
 	var (
-		err      error
-		total    int64
-		pageInfo common.PageInfo
-		posts    []*model.PostDetailDto
+		err   error
+		total int64
+		posts []*model.PostDetailDto
 	)
+	pageInfo := common.PageInfo{
+		Page:     1,
+		PageSize: 5,
+	}
 	if errStr := ginx.BindAndValid(c, &pageInfo); errStr != "" {
 		ginx.ResponseErrorWithMsg(c, e.CodeInvalidParams, errStr)
 		return
 	}
-	if posts, total, err = p.postService.GetPostList(&pageInfo); err != nil {
+	if posts, total, err = p.postService.GetPostListByIDs(&pageInfo); err != nil {
 		ginx.ResponseError(c, e.CodeError)
 		return
 	}

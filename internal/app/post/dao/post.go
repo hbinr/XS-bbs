@@ -30,6 +30,7 @@ func (p *postDao) Create(post *PostModel) (err error) {
 	_, err = pipeline.Exec()
 	return
 }
+
 func (p *postDao) GetPostByID(pID int64) (post *PostModel, err error) {
 	post = new(PostModel)
 	err = p.db.Where("post_id", pID).First(&post).Error
@@ -42,4 +43,9 @@ func (p *postDao) GetPostList(limit, offset int) (posts []*PostModel, total int6
 	err = db.Count(&total).Error
 	err = db.Limit(limit).Offset(offset).Find(&posts).Error
 	return
+}
+
+// GetPostListByIDs 根据post_id切片获取post列表，并按照给定的post_id顺序返回
+func (p *postDao) GetPostListByIDs(pIDs []string) ([]*PostModel, int64, error) {
+	panic("implement me")
 }

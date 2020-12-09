@@ -1,7 +1,6 @@
 package service
 
 import (
-	"gorm.io/gorm"
 	"xs.bbs/internal/app/community/dao"
 	"xs.bbs/internal/app/community/model"
 )
@@ -29,8 +28,8 @@ type (
 	}
 )
 
-func NewCommunityService(db *gorm.DB) ICommunityService {
+func NewCommunityService(dao dao.ICommunityDao) ICommunityService {
 	return &communityService{
-		dao: dao.NewCommunityDao(db),
+		dao: dao,
 	}
 }

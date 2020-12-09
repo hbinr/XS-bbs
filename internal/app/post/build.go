@@ -4,9 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	"gorm.io/gorm"
+
 	"xs.bbs/internal/app/post/controller"
+
+	commuDao "xs.bbs/internal/app/community/dao"
+	postDao "xs.bbs/internal/app/post/dao"
 	"xs.bbs/internal/app/post/model"
 	"xs.bbs/internal/app/post/service"
+	userDao "xs.bbs/internal/app/user/dao"
 )
 
 var (
@@ -19,6 +24,9 @@ var (
 )
 
 func Init(engine *gin.Engine, db *gorm.DB, rdb *redis.Client) *controller.PostController {
-	cs := service.NewPostService(db, rdb)
-	return controller.NewPostController(engine, cs)
+	postDao := postDao.NewPostDao(db, rdb)
+	userDao := userDao.NewUserDao(db)
+	commuDao := commuDao.NewCommunityDao(db)
+	postService := service.NewPostService(postDao, userDao, commuDao)
+	return controller.NewPostController(engine, postService)
 }
