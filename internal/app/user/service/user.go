@@ -1,6 +1,7 @@
 package service
 
 import (
+	"go.uber.org/zap"
 	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/pkg/tool/hash"
@@ -81,6 +82,7 @@ func (u *userService) SelectByName(userName string) (*UserDto, error) {
 func (u *userService) SelectByID(userID int64) (*UserDto, error) {
 	uModel, err := u.dao.GetUserByID(userID)
 	if err != nil {
+		zap.L().Error("userDao.GetUserByID", zap.Error(err), zap.Int64("userID", userID))
 		return nil, err
 	}
 	var uDto UserDto

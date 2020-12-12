@@ -1,6 +1,6 @@
 system:
   app_name: "myApp"
-  mode: "dev"
+  mode: "prod"
   port: 8090
   version: "v0.0.1"
   start_time: "2020-10-01"
@@ -8,16 +8,16 @@ system:
 
 log:
   prefix: "[xs-bbs]"
-  level: "debug"
+  level: "error"
   filename: "../logs/xs-bbs.log"
   max_size: 200
   max_age: 30
   max_backups: 7
 
 mysql:
-  addr: "127.0.0.1:3306"
-  dsn: "root:123456@tcp(127.0.0.1:3306)/XS-bbs?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
-  log_mode: true
+  addr: "127.0.0.1:4000"
+  dsn: "root:@tcp(127.0.0.1:4000)/xs-bbs?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
+  log_mode: false
   max_open_conns: 10
   max_idle_conns: 10
 

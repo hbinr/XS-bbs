@@ -3,7 +3,6 @@ package dao
 import (
 	"errors"
 
-	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"xs.bbs/internal/pkg/constant/e"
 )
@@ -40,7 +39,6 @@ func (u *UserDao) GetUserByID(userID int64) (*UserModel, error) {
 	)
 	if err = u.db.Where("user_id = ?", userID).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			zap.L().Error("userDao.GetUserByID", zap.Error(err))
 			return nil, e.ErrUserNotExist
 		}
 		return nil, err

@@ -29,7 +29,6 @@ type LogConfig struct {
 
 // MySQLConfig mysql配置
 type MySQLConfig struct {
-	Addr         string `mapstructure:"addr"`           // host:port,for trace
 	DSN          string `mapstructure:"dsn"`            // write data source name.
 	LogMode      bool   `mapstructure:"log_mode"`       // whether to open the log
 	MaxOpenConns int    `mapstructure:"max_open_conns"` // max open conns

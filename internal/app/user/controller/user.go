@@ -101,6 +101,10 @@ func (u *UserController) Get(c *gin.Context) {
 	}
 
 	if uDto, err = u.userService.SelectByID(userID); err != nil {
+		if errors.Is(err, e.ErrUserNotExist) {
+			ginx.ResponseError(c, e.CodeUserNotExist)
+			return
+		}
 		ginx.ResponseError(c, e.CodeError)
 		return
 	}
