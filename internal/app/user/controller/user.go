@@ -18,7 +18,7 @@ import (
 // @Accept  json
 // @Produce  json
 // @Param body body model.SignUpParam true "body"
-// @Success 200 {object} ginx.Response{data=model.UserDto} "success"
+// @Success 200 {object} ginx.Resp{data=model.UserDto} "success"
 // @Router /user/signup [post]
 func (u *UserController) SignUp(c *gin.Context) {
 	var (
@@ -27,23 +27,23 @@ func (u *UserController) SignUp(c *gin.Context) {
 		uDto   *model.UserDto
 	)
 	if errStr := ginx.BindAndValid(c, &uParam); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CodeError, errStr)
+		ginx.RespErrorWithMsg(c, e.CodeError, errStr)
 		return
 	}
 
 	if uDto, err = u.userService.SignUp(&uParam); err != nil {
 		if errors.Is(err, e.ErrUserExist) {
-			ginx.ResponseError(c, e.CodeUserExist)
+			ginx.RespError(c, e.CodeUserExist)
 			return
 		}
 		if errors.Is(err, e.ErrEmailExist) {
-			ginx.ResponseError(c, e.CodeEmailExist)
+			ginx.RespError(c, e.CodeEmailExist)
 			return
 		}
-		ginx.ResponseError(c, e.CodeError)
+		ginx.RespError(c, e.CodeError)
 		return
 	}
-	ginx.ResponseSuccess(c, uDto)
+	ginx.RespSuccess(c, uDto)
 }
 
 // SignIn godoc
@@ -63,19 +63,19 @@ func (u *UserController) SignIn(c *gin.Context) {
 		token     string
 	)
 	if errStr := ginx.BindAndValid(c, &signParam); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CodeError, errStr)
+		ginx.RespErrorWithMsg(c, e.CodeError, errStr)
 		return
 	}
 
 	if token, err = u.userService.SignIn(&signParam); err != nil {
 		if errors.Is(err, e.ErrUserNotExist) {
-			ginx.ResponseError(c, e.CodeUserNotExist)
+			ginx.RespError(c, e.CodeUserNotExist)
 			return
 		}
-		ginx.ResponseError(c, e.CodeWrongUserNameOrPassword)
+		ginx.RespError(c, e.CodeWrongUserNameOrPassword)
 		return
 	}
-	ginx.ResponseSuccess(c, token)
+	ginx.RespSuccess(c, token)
 }
 
 // Get godoc
@@ -86,7 +86,7 @@ func (u *UserController) SignIn(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id query string true "id"
-// @Success 200 {object} ginx.Response{data=model.UserDto} "success"
+// @Success 200 {object} ginx.Resp{data=model.UserDto} "success"
 // @Router /user/Get [get]
 func (u *UserController) Get(c *gin.Context) {
 	var (
@@ -96,19 +96,19 @@ func (u *UserController) Get(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.ResponseError(c, e.CodeInvalidParams)
+		ginx.RespError(c, e.CodeInvalidParams)
 		return
 	}
 
 	if uDto, err = u.userService.SelectByID(userID); err != nil {
 		if errors.Is(err, e.ErrUserNotExist) {
-			ginx.ResponseError(c, e.CodeUserNotExist)
+			ginx.RespError(c, e.CodeUserNotExist)
 			return
 		}
-		ginx.ResponseError(c, e.CodeError)
+		ginx.RespError(c, e.CodeError)
 		return
 	}
-	ginx.ResponseSuccess(c, uDto)
+	ginx.RespSuccess(c, uDto)
 }
 
 // Delete godoc
@@ -119,7 +119,7 @@ func (u *UserController) Get(c *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id query string true "id"
-// @Success 200 {object} ginx.Response{data=string} "success"
+// @Success 200 {object} ginx.Resp{data=string} "success"
 // @Router /user/delete [get]
 func (u *UserController) Delete(c *gin.Context) {
 	var (
@@ -128,13 +128,13 @@ func (u *UserController) Delete(c *gin.Context) {
 	)
 
 	if userID, err = ginx.QueryInt("userID", c); err != nil {
-		ginx.ResponseError(c, e.CodeInvalidParams)
+		ginx.RespError(c, e.CodeInvalidParams)
 		return
 	}
 
 	if !u.userService.Delete(userID) {
-		ginx.ResponseError(c, e.CodeError)
+		ginx.RespError(c, e.CodeError)
 		return
 	}
-	ginx.ResponseSuccess(c, nil)
+	ginx.RespSuccess(c, nil)
 }
