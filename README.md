@@ -5,7 +5,9 @@ Xiang Shou 论坛，XS-bbs 基于gin + gorm + go-redis 实战，面向接口开�
 
 后来个人觉得该项目很小，引入 wire 反而增加了初学者理解该项目的难度，就全部改为 Go 原生实现依赖注入了~
 
-另外个人在该项目中不仅使用了gin, 还使用了 Goframe, 一个开箱即用的框架，不仅仅是web开发能用， 主要是学习完后使用了Gofame的一些模块，这里是个人使用Gofame validate模块时写的学习文章：https://goframe.org/pages/viewpage.action?pageId=3673259
+另外个人在该项目中不仅使用了gin, 还使用了 GoFrame, 一个开箱即用的框架，不仅仅是web开发能用， 主要是学习完后使用了GoFame的一些模块。
+
+这里是个人使用GoFame validate模块时写的文章：https://goframe.org/pages/viewpage.action?pageId=3673259
 
 
 
