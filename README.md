@@ -1,12 +1,22 @@
 # XS-bbs
-Xiang Shou 论坛
+Xiang Shou 论坛，XS-bbs 基于gin + gorm + go-redis 实战，面向接口开发。
+
+项目早期使用过 wire 来解决依赖注入，主要是学习完 wire 后进行实践。
+
+后来个人觉得该项目很小，引入 wire 反而增加了初学者理解该项目的难度，就全部改为 Go 原生实现依赖注入了~
+
+另外个人在该项目中不仅使用了gin, 还使用了 GoFrame, 一个开箱即用的框架，不仅仅是web开发能用， 主要是学习完后使用了GoFame的一些模块。
+
+这里是个人使用GoFame validate模块时写的文章：https://goframe.org/pages/viewpage.action?pageId=3673259
+
+
 
 ## 目录结构
 ```sh
 ├── cmd                # 程序入口
 │   ├── main.go
-│   ├── wire_gen.go
-│   └── wire.go
+│   ├── wire_gen.go    # 已删除
+│   └── wire.go        # 已删除
 ├── docs               # swagger接口文档
 │   ├── docs.go
 │   ├── swagger.json
