@@ -14,17 +14,16 @@ var _ IPostDao = (*postDao)(nil)
 //)
 
 type (
-	PostModel = model.Post
-	postDao   struct {
+	postDao struct {
 		db  *gorm.DB
 		rdb *redis.Client
 	}
 
 	IPostDao interface {
-		Create(post *PostModel) error
-		GetPostByID(pID int64) (*PostModel, error)
-		GetPostListByIDs(ids []string) ([]*PostModel, int64, error)
-		GetPostList(page, pageSize int) ([]*PostModel, int64, error)
+		Create(post *model.Post) error
+		GetPostByID(pID int64) (*model.Post, error)
+		GetPostListByIDs(ids []string) ([]*model.Post, int64, error)
+		GetPostList(page, pageSize int) ([]*model.Post, int64, error)
 		// Vote 投票,数据存储于redis中
 		Vote(userID, postID string, value float64) error
 	}

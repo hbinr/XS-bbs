@@ -24,7 +24,7 @@ func RespSuccess(c *gin.Context, data interface{}) {
 	})
 }
 
-// RespSuccess 响应失败，携带状态及对应信息
+// RespError 响应失败，携带状态及对应信息
 func RespError(c *gin.Context, code e.ResCode) {
 	c.JSON(http.StatusOK, &Response{
 		Code: code,
@@ -33,7 +33,7 @@ func RespError(c *gin.Context, code e.ResCode) {
 	})
 }
 
-// RespSuccess 响应失败，携带状态+其他自定义信息
+// RespErrorWithMsg 响应失败，携带状态+其他自定义信息
 func RespErrorWithMsg(c *gin.Context, code e.ResCode, msg string) {
 	c.JSON(http.StatusOK, &Response{
 		Code: code,

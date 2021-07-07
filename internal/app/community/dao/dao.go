@@ -13,15 +13,14 @@ var _ ICommunityDao = (*CommunityDao)(nil)
 //	wire.Bind(new(ICommunityDao), new(*CommunityDao)))
 
 type (
-	CommunityModel = model.Community
-	CommunityDao   struct {
+	CommunityDao struct {
 		db *gorm.DB
 	}
 
 	// ICommunityDao 文章标签接口
 	ICommunityDao interface {
-		GetCommunityList() ([]CommunityModel, error)
-		GetCommunityDetailByID(int64) (*CommunityModel, error)
+		GetCommunityList() ([]model.Community, error)
+		GetCommunityDetailByID(int64) (*model.Community, error)
 	}
 )
 

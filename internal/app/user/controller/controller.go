@@ -18,12 +18,15 @@ func NewUserController(e *gin.Engine, us service.IUserService) *UserController {
 		engine:      e,
 		userService: us,
 	}
+
 	g := e.Group("/api/user")
+
 	{
 		g.POST("/signup", user.SignUp)
 		g.POST("/signin", user.SignIn)
-		g.GET("/get", user.Get)
-		g.GET("/delete", user.Delete)
+		g.GET("/:userID", user.Get)
+		g.DELETE("/:userID", user.Delete)
 	}
+
 	return user
 }

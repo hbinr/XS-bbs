@@ -15,17 +15,16 @@ var _ IUserDao = (*UserDao)(nil)
 //	wire.Bind(new(IUserDao), new(*UserDao)))
 
 type (
-	UserModel = model.User
-	UserDao   struct {
+	UserDao struct {
 		db *gorm.DB
 	}
 
 	IUserDao interface {
-		Insert(user *UserModel) error
+		Insert(user *model.User) error
 		Delete(int64) bool
-		Update(user *UserModel) error
-		GetUserByID(id int64) (*UserModel, error)
-		GetUserByName(userName string) (*UserModel, error)
+		Update(user *model.User) error
+		GetUserByID(id int64) (*model.User, error)
+		GetUserByName(userName string) (*model.User, error)
 		// CheckUserByUserName 根据userName检查用户是否存在
 		CheckUserByUserName(userName string) error
 		// CheckUserByEmail 通过用户email检查用户

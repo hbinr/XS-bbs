@@ -25,7 +25,10 @@ var (
 
 /*
 	笔记：
-	曾经想 service.NewPostService()修改为service.NewPostService(store)，其中store是一个接口，包含了全部数据访问接口
+	曾经想 service.NewPostService()修改为service.NewService(store)
+
+	其中store是一个接口，嵌套了全部数据访问接口: PostDao + UserDao + CommunityDao
+
 	然后service层可以链式调用：
 		c.repository.Post().Find(args1)....
 		c.repository.User().Create(args2)....
@@ -38,9 +41,9 @@ var (
 		3.只管命令不要询问，直接做具体的事，不要去找是哪个接口，链式调用就出现了先找到Post接口，然后再调用其实现
 */
 func Init(engine *gin.Engine, db *gorm.DB, rdb *redis.Client) *controller.PostController {
-	postDao := postDao.NewPostDao(db, rdb)
-	userDao := userDao.NewUserDao(db)
-	commuDao := commuDao.NewCommunityDao(db)
-	postService := service.NewPostService(postDao, userDao, commuDao)
+	post := postDao.NewPostDao(db, rdb)
+	user := userDao.NewUserDao(db)
+	community := commuDao.NewCommunityDao(db)
+	postService := service.NewPostService(post, user, community)
 	return controller.NewPostController(engine, postService)
 }

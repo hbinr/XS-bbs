@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"errors"
-
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
@@ -31,19 +29,18 @@ func (u *UserController) SignUp(c *gin.Context) {
 		return
 	}
 
-	if uDto, err = u.userService.SignUp(&uParam); err != nil {
-		if errors.Is(err, e.ErrUserExist) {
-			ginx.RespError(c, e.CodeUserExist)
-			return
-		}
-		if errors.Is(err, e.ErrEmailExist) {
-			ginx.RespError(c, e.CodeEmailExist)
-			return
-		}
+	uDto, err = u.userService.SignUp(&uParam)
+
+	switch err {
+	case nil:
+		ginx.RespSuccess(c, uDto)
+	case e.ErrEmailExist:
+		ginx.RespError(c, e.CodeEmailExist)
+	case e.ErrConvDataErr:
+		ginx.RespError(c, e.CodeConvDataErr)
+	default:
 		ginx.RespError(c, e.CodeError)
-		return
 	}
-	ginx.RespSuccess(c, uDto)
 }
 
 // SignIn godoc
@@ -67,15 +64,16 @@ func (u *UserController) SignIn(c *gin.Context) {
 		return
 	}
 
-	if token, err = u.userService.SignIn(&signParam); err != nil {
-		if errors.Is(err, e.ErrUserNotExist) {
-			ginx.RespError(c, e.CodeUserNotExist)
-			return
-		}
+	token, err = u.userService.SignIn(&signParam)
+
+	switch err {
+	case nil:
+		ginx.RespSuccess(c, token)
+	case e.ErrUserNotExist:
+		ginx.RespError(c, e.CodeUserNotExist)
+	default:
 		ginx.RespError(c, e.CodeWrongUserNameOrPassword)
-		return
 	}
-	ginx.RespSuccess(c, token)
 }
 
 // Get godoc
@@ -100,15 +98,18 @@ func (u *UserController) Get(c *gin.Context) {
 		return
 	}
 
-	if uDto, err = u.userService.SelectByID(userID); err != nil {
-		if errors.Is(err, e.ErrUserNotExist) {
-			ginx.RespError(c, e.CodeUserNotExist)
-			return
-		}
+	uDto, err = u.userService.SelectByID(userID)
+
+	switch err {
+	case nil:
+		ginx.RespSuccess(c, uDto)
+	case e.ErrUserNotExist:
+		ginx.RespError(c, e.CodeUserNotExist)
+	case e.ErrConvDataErr:
+		ginx.RespError(c, e.CodeConvDataErr)
+	default:
 		ginx.RespError(c, e.CodeError)
-		return
 	}
-	ginx.RespSuccess(c, uDto)
 }
 
 // Delete godoc

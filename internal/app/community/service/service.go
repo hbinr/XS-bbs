@@ -22,7 +22,7 @@ type (
 	// ICommunityService 文章标签接口
 	ICommunityService interface {
 		// GetCommunityList 获取所有文章标签
-		GetCommunityList() ([]CommunityDto, error)
+		GetCommunityList() ([]*CommunityDto, error)
 		// GetCommunityDetailByID 根据社区id获取社区详情
 		GetCommunityDetailByID(int64) (*CommunityDto, error)
 	}

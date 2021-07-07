@@ -52,5 +52,5 @@ func InitEngine(c *conf.Config) *gin.Engine {
 
 // Start the web app
 func (e *WebApp) Start() {
-	e.Run(fmt.Sprintf(":%d", e.Config.System.Port))
+	panic(e.Run(fmt.Sprintf(":%d", e.Config.System.Port)))
 }

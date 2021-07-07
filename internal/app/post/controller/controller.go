@@ -18,12 +18,15 @@ func NewPostController(e *gin.Engine, us service.IPostService) *PostController {
 		engine:      e,
 		postService: us,
 	}
+
 	g := e.Group("/api/post")
+
 	{
 		g.POST("/create", post.CreatePostHandle)
-		g.GET("/get", post.GetPostDetailHandle)
-		g.POST("/list", post.GetPostListHandle)
+		g.GET("/post", post.GetPostDetailHandle)
+		g.GET("/posts", post.GetPostListHandle)
 		g.POST("/vote", post.VoteForPost)
 	}
+
 	return post
 }

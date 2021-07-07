@@ -8,6 +8,6 @@ var (
 	ErrUserNotExist   = errors.New(CodeUserNotExist.Msg())
 	ErrEmailExist     = errors.New(CodeEmailExist.Msg())
 	ErrInvalidID      = errors.New(CodeInvalidID.Msg())
-
+	ErrConvDataErr    = errors.New(CodeConvDataErr.Msg())
 	ErrVoteTimeExpire = errors.New("投票时间已过")
 )

@@ -21,9 +21,11 @@ func NewCommunityController(e *gin.Engine, as service.ICommunityService) *Commun
 
 	e.Use(middleware.JWTAuth())
 	g := e.Group("/api/community")
+
 	{
-		g.GET("/list", community.GetCommunityList)
+		g.GET("/communities", community.GetCommunityList)
 		g.GET("/detail", community.GetCommunityDetail)
 	}
+
 	return community
 }

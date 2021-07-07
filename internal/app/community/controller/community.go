@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"errors"
-
 	"github.com/gin-gonic/gin"
 	"xs.bbs/internal/app/community/model"
 	"xs.bbs/internal/pkg/constant/e"
@@ -20,7 +18,7 @@ func (a *CommunityController) GetCommunityList(c *gin.Context) {
 	ginx.RespSuccess(c, resList)
 }
 
-// GetCommunityList 获取所有文章标签
+// GetCommunityDetail 获取所有文章标签
 func (a *CommunityController) GetCommunityDetail(c *gin.Context) {
 	var (
 		id     int64
@@ -33,13 +31,15 @@ func (a *CommunityController) GetCommunityDetail(c *gin.Context) {
 	}
 
 	resDto, err = a.communityService.GetCommunityDetailByID(id)
-	if err != nil {
-		if errors.Is(err, e.ErrInvalidID) {
-			ginx.RespError(c, e.CodeInvalidID)
-			return
-		}
+
+	switch err {
+	case nil:
+		ginx.RespSuccess(c, resDto)
+	case e.ErrInvalidID:
+		ginx.RespError(c, e.CodeInvalidID)
+	case e.ErrConvDataErr:
+		ginx.RespError(c, e.CodeConvDataErr)
+	default:
 		ginx.RespError(c, e.CodeError)
-		return
 	}
-	ginx.RespSuccess(c, resDto)
 }
