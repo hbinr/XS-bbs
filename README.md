@@ -13,8 +13,8 @@ Xiang Shou 论坛，XS-bbs 基于gin + gorm + go-redis 实战，面向接口开�
 ```sh
 ├── cmd                # 程序入口
 │   ├── main.go
-│   ├── wire_gen.go
-│   └── wire.go
+│   ├── wire_gen.go    # 已删除
+│   └── wire.go        # 已删除
 ├── docs               # swagger接口文档
 │   ├── docs.go
 │   ├── swagger.json
