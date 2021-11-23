@@ -1,29 +1,29 @@
-package dao
+package repository
 
 import (
 	"gorm.io/gorm"
 	"xs.bbs/internal/app/community/model"
 )
 
-var _ ICommunityDao = (*CommunityDao)(nil)
+var _ CommunityRepo = (*communityRepo)(nil)
 
 // CommunityDaoSet CommunityDao依赖注入
 //var CommunityDaoSet = wire.NewSet(
-//	wire.Struct(new(CommunityDao), "*"),
-//	wire.Bind(new(ICommunityDao), new(*CommunityDao)))
+//	wire.Struct(new(communityRepo), "*"),
+//	wire.Bind(new(CommunityRepo), new(*communityRepo)))
 
 type (
-	CommunityDao struct {
+	communityRepo struct {
 		db *gorm.DB
 	}
 
-	// ICommunityDao 文章标签接口
-	ICommunityDao interface {
+	// CommunityRepo 文章标签接口
+	CommunityRepo interface {
 		GetCommunityList() ([]model.Community, error)
 		GetCommunityDetailByID(int64) (*model.Community, error)
 	}
 )
 
-func NewCommunityDao(db *gorm.DB) ICommunityDao {
-	return &CommunityDao{db: db}
+func NewCommunityRepo(db *gorm.DB) CommunityRepo {
+	return &communityRepo{db: db}
 }

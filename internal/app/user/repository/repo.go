@@ -1,4 +1,4 @@
-package dao
+package repository
 
 import (
 	"xs.bbs/internal/app/user/model"
@@ -7,19 +7,19 @@ import (
 )
 
 // 验证接口是否实现
-var _ IUserDao = (*UserDao)(nil)
+var _ UserRepo = (*userRepo)(nil)
 
-// UserDaoSet 使用wire 依赖注入，相当于下面的 NewUserDao 函数
+// UserDaoSet 使用wire 依赖注入，相当于下面的 NewUserRepo 函数
 //var UserDaoSet = wire.NewSet(
-//	wire.Struct(new(UserDao), "*"),
-//	wire.Bind(new(IUserDao), new(*UserDao)))
+//	wire.Struct(new(userRepo), "*"),
+//	wire.Bind(new(UserRepo), new(*userRepo)))
 
 type (
-	UserDao struct {
+	userRepo struct {
 		db *gorm.DB
 	}
 
-	IUserDao interface {
+	UserRepo interface {
 		Insert(user *model.User) error
 		Delete(int64) bool
 		Update(user *model.User) error
@@ -32,6 +32,6 @@ type (
 	}
 )
 
-func NewUserDao(db *gorm.DB) IUserDao {
-	return &UserDao{db: db}
+func NewUserRepo(db *gorm.DB) UserRepo {
+	return &userRepo{db: db}
 }

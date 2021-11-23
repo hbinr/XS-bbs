@@ -3,9 +3,9 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"xs.bbs/internal/app/post/model"
-	"xs.bbs/internal/pkg/common"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
+	"xs.bbs/internal/pkg/util"
 )
 
 func (p *PostController) CreatePostHandle(c *gin.Context) {
@@ -61,7 +61,7 @@ func (p *PostController) GetPostListHandle(c *gin.Context) {
 		posts []*model.PostDetailDto
 	)
 
-	pageInfo := common.PageInfo{
+	pageInfo := util.PageInfo{
 		Page:     1,
 		PageSize: 5,
 	}
@@ -76,7 +76,7 @@ func (p *PostController) GetPostListHandle(c *gin.Context) {
 		return
 	}
 
-	pageRes := &common.PageResult{
+	pageRes := &util.PageResult{
 		List:     posts,
 		Total:    total,
 		Page:     pageInfo.Page,

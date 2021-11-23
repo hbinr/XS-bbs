@@ -10,10 +10,10 @@ import (
 
 type UserController struct {
 	engine      *gin.Engine
-	userService service.IUserService
+	userService service.UserService
 }
 
-func NewUserController(e *gin.Engine, us service.IUserService) *UserController {
+func NewUserController(e *gin.Engine, us service.UserService) *UserController {
 	user := &UserController{
 		engine:      e,
 		userService: us,

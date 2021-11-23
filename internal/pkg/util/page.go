@@ -1,4 +1,4 @@
-package common
+package util
 
 // PageInfo 分页请求数据
 type PageInfo struct {

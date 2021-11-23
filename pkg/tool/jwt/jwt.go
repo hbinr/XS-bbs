@@ -4,8 +4,9 @@ import (
 	"errors"
 	"time"
 
+	"xs.bbs/internal/pkg/constant"
+
 	"github.com/dgrijalva/jwt-go"
-	"xs.bbs/internal/pkg/constant/key"
 )
 
 type MyClaims struct {
@@ -29,7 +30,7 @@ func GenToken(userID int64) (string, error) {
 	// 使用指定的签名方法创建签名对象
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, c)
 	// 使用指定的secret签名，注意转换为字节切片，并获得完整的编码后的字符串token
-	return token.SignedString([]byte(key.KeyMySecret))
+	return token.SignedString([]byte(constant.KeyMySecret))
 }
 
 // ParseToken 解析JWT
@@ -41,7 +42,7 @@ func ParseToken(tokenString string) (claims *MyClaims, err error) {
 	// 这行分配内存地址的代码一定要写，否则在赋值时会提示invalid vlaue
 	claims = new(MyClaims)
 	token, err = jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (i interface{}, err error) {
-		return []byte(key.KeyMySecret), nil
+		return []byte(constant.KeyMySecret), nil
 	})
 	if err != nil {
 		return

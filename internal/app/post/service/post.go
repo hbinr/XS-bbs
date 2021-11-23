@@ -10,7 +10,6 @@ import (
 	"xs.bbs/internal/app/post/model"
 	post "xs.bbs/internal/app/post/model"
 	user "xs.bbs/internal/app/user/model"
-	"xs.bbs/internal/pkg/common"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/util"
 	"xs.bbs/pkg/tool/snowflake"
@@ -52,7 +51,7 @@ func (p *postService) GetPostByID(postID int64) (dto *post.PostDetailDto, err er
 
 // GetPostListByIDs 根据post_id切片获取post列表，并按照给定的post_id顺序返回
 
-func (p *postService) GetPostListByIDs(paging *common.PageInfo) (resList []*model.PostDetailDto, total int64, err error) {
+func (p *postService) GetPostListByIDs(paging *util.PageInfo) (resList []*model.PostDetailDto, total int64, err error) {
 	var (
 		postListM  []*post.Post
 		userM      *user.User

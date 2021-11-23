@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"xs.bbs/internal/app/user/controller"
-	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
+	"xs.bbs/internal/app/user/repository"
 	"xs.bbs/internal/app/user/service"
 )
 
@@ -20,7 +20,7 @@ var (
 )
 
 func Init(engine *gin.Engine, db *gorm.DB) *controller.UserController {
-	userDao := dao.NewUserDao(db)
+	userDao := repository.NewUserRepo(db)
 	userService := service.NewUserService(userDao)
 	return controller.NewUserController(engine, userService)
 }

@@ -1,25 +1,25 @@
 package service
 
 import (
-	"xs.bbs/internal/app/user/dao"
 	"xs.bbs/internal/app/user/model"
+	"xs.bbs/internal/app/user/repository"
 )
 
 // 验证接口是否实现
-var _ IUserService = (*userService)(nil)
+var _ UserService = (*userService)(nil)
 
 // UserServiceSet 使用 wire 依赖注入，相当于下面的 NewUserService 函数
 //var UserServiceSet = wire.NewSet(
 //	wire.Struct(new(userService), "*"),
-//	wire.Bind(new(IUserService), new(*userService)))
+//	wire.Bind(new(UserService), new(*userService)))
 
 type (
 	UserDto     = model.UserDto
 	userService struct {
-		dao dao.IUserDao
+		dao repository.UserRepo
 	}
 
-	IUserService interface {
+	UserService interface {
 		// SignUp 注册
 		SignUp(signUp *model.SignUpParam) (*UserDto, error)
 		// SignIn 登陆
@@ -31,7 +31,7 @@ type (
 	}
 )
 
-func NewUserService(dao dao.IUserDao) IUserService {
+func NewUserService(dao repository.UserRepo) UserService {
 	return &userService{
 		dao: dao,
 	}

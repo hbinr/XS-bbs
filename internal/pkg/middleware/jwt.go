@@ -3,9 +3,10 @@ package middleware
 import (
 	"strings"
 
+	"xs.bbs/internal/pkg/constant"
+
 	"github.com/gin-gonic/gin"
 	"xs.bbs/internal/pkg/constant/e"
-	"xs.bbs/internal/pkg/constant/key"
 	"xs.bbs/internal/pkg/ginx"
 	"xs.bbs/pkg/tool/jwt"
 )
@@ -38,7 +39,7 @@ func JWTAuth() gin.HandlerFunc {
 			return
 		}
 		// 将当前请求的userID信息保存到请求的上下文c上
-		c.Set(key.KeyCtxUserID, mc.UserID)
+		c.Set(constant.KeyCtxUserID, mc.UserID)
 
 		c.Next() // 后续的处理请求的函数中 可以用过c.Get(KeyCtxUserID) 来获取当前请求的用户信息
 	}

@@ -1,4 +1,4 @@
-package dao
+package repository
 
 import (
 	"github.com/go-redis/redis"
@@ -6,20 +6,20 @@ import (
 	"xs.bbs/internal/app/post/model"
 )
 
-var _ IPostDao = (*postDao)(nil)
+var _ PostRepo = (*postRepo)(nil)
 
 //var PostDaoSet = wire.NewSet(
-//	new(postDao), "*",
-//	wire.Bind(new(IPostDao), new(*postDao)),
+//	new(postRepo), "*",
+//	wire.Bind(new(PostRepo), new(*postRepo)),
 //)
 
 type (
-	postDao struct {
+	postRepo struct {
 		db  *gorm.DB
 		rdb *redis.Client
 	}
 
-	IPostDao interface {
+	PostRepo interface {
 		Create(post *model.Post) error
 		GetPostByID(pID int64) (*model.Post, error)
 		GetPostListByIDs(ids []string) ([]*model.Post, int64, error)
@@ -29,6 +29,6 @@ type (
 	}
 )
 
-func NewPostDao(db *gorm.DB, rdb *redis.Client) IPostDao {
-	return &postDao{db: db, rdb: rdb}
+func NewPostRepo(db *gorm.DB, rdb *redis.Client) PostRepo {
+	return &postRepo{db: db, rdb: rdb}
 }
