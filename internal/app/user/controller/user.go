@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"errors"
+
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
@@ -53,25 +55,26 @@ func (u *UserController) SignUp(c *gin.Context) {
 // @Param body body model.SignInParam true "body参数"
 // @Success 200 {string} string "ok" "登陆成功"
 // @Router /user/signin [post]
-func (u *UserController) SignIn(c *gin.Context) {
+func (u UserController) SignIn(c *gin.Context) {
 	var (
 		err       error
 		signParam model.SignInParam
 		token     string
 	)
+
 	if errStr := ginx.BindAndValid(c, &signParam); errStr != "" {
 		ginx.RespErrorWithMsg(c, e.CodeError, errStr)
 		return
 	}
-
 	if token, err = u.userService.Login(&signParam); err != nil {
 		if errors.Is(err, e.ErrUserNotExist) {
-			ginx.ResponseError(c, e.CodeUserNotExist)
+			ginx.RespError(c, e.CodeUserNotExist)
 			return
 		}
-		ginx.ResponseError(c, e.CodeWrongUserNameOrPassword)
+		ginx.RespError(c, e.CodeWrongUserNameOrPassword)
 		return
-	token, err = u.userService.SignIn(&signParam)
+	}
+	token, err = u.userService.Login(&signParam)
 
 	switch err {
 	case nil:
