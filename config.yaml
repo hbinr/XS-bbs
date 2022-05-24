@@ -16,7 +16,7 @@ log:
 
 mysql:
   addr: "127.0.0.1:4000"
-  dsn: "root:@tcp(127.0.0.1:4000)/xs-bbs?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
+  dsn: "root:@tcp(127.0.0.1:4000)/xs-bbs?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8mb4"
   log_mode: false
   max_open_conns: 10
   max_idle_conns: 10

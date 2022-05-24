@@ -67,7 +67,7 @@ func (u *UserController) SignIn(c *gin.Context) {
 		return
 	}
 
-	if token, err = u.userService.SignIn(&signParam); err != nil {
+	if token, err = u.userService.Login(&signParam); err != nil {
 		if errors.Is(err, e.ErrUserNotExist) {
 			ginx.ResponseError(c, e.CodeUserNotExist)
 			return

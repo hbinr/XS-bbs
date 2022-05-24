@@ -22,8 +22,8 @@ type (
 	IUserService interface {
 		// SignUp 注册
 		SignUp(signUp *model.SignUpParam) (*UserDto, error)
-		// SignIn 登陆
-		SignIn(signIn *model.SignInParam) (string, error)
+		// Login 登陆
+		Login(signIn *model.SignInParam) (string, error)
 		Delete(int64) bool
 		Update(user *model.UserDto) error
 		SelectByID(id int64) (*UserDto, error)

@@ -36,8 +36,8 @@ func (u *userService) SignUp(param *model.SignUpParam) (dto *UserDto, err error)
 	return
 }
 
-// SignIn 登陆
-func (u *userService) SignIn(signIn *model.SignInParam) (token string, err error) {
+// Login 登陆
+func (u *userService) Login(signIn *model.SignInParam) (token string, err error) {
 	var user *model.User
 	// 获取用户信息
 	if user, err = u.dao.GetUserByName(signIn.Username); err != nil {
