@@ -10,10 +10,10 @@ import (
 
 type CommunityController struct {
 	engine           *gin.Engine
-	communityService service.ICommunityService
+	communityService service.CommunityService
 }
 
-func NewCommunityController(e *gin.Engine, as service.ICommunityService) *CommunityController {
+func NewCommunityController(e *gin.Engine, as service.CommunityService) *CommunityController {
 	community := &CommunityController{
 		engine:           e,
 		communityService: as,
@@ -21,9 +21,11 @@ func NewCommunityController(e *gin.Engine, as service.ICommunityService) *Commun
 
 	e.Use(middleware.JWTAuth())
 	g := e.Group("/api/community")
+
 	{
 		g.GET("/list", community.GetCommunityList)
-		g.GET("/detail", community.GetCommunityDetail)
+		g.GET("/info", community.GetCommunityDetail)
 	}
+
 	return community
 }

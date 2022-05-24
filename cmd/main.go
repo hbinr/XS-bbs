@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
 	"go.uber.org/zap"
 
@@ -13,13 +13,13 @@ import (
 	"xs.bbs/pkg/cache"
 	"xs.bbs/pkg/conf"
 	"xs.bbs/pkg/database"
-	"xs.bbs/pkg/log"
+	logger "xs.bbs/pkg/log"
 	"xs.bbs/pkg/tool/snowflake"
 )
 
 // @title 项目标题
 // @version 0.0.1
-// @description 这是一个gin web开发脚手架
+// @description 项目描述
 // @termsOfService http://swagger.io/terms/
 
 // @contact.name 这里写联系人信息
@@ -42,12 +42,10 @@ func main() {
 func initWebApp() (webApp *app.WebApp, err error) {
 	config, err := conf.Init()
 	if err != nil {
-		fmt.Println("conf.Init failed,err", err)
-		return
+		log.Fatalf("conf.Init failed, err: %+v", err)
 	}
-	if err = log.Init(config); err != nil {
-		fmt.Println("log.Init failed,err", err)
-		return
+	if err = logger.Init(config); err != nil {
+		log.Fatalf("log.Init failed, err: %+v", err)
 	}
 	if err = snowflake.Init(config); err != nil {
 		zap.L().Error("snowflake.Init failed", zap.Error(err))

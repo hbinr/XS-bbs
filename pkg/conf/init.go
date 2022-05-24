@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/fsnotify/fsnotify"
 
@@ -12,11 +13,8 @@ import (
 const defaultConfigFile = "../config.yaml"
 
 // Init init config
-func Init() (*Config, error) {
-	var (
-		conf Config
-		err  error
-	)
+func Init() (conf *Config, err error) {
+
 	pflag.StringP("conf", "c", "", "choose conf file.")
 	pflag.Parse()
 
@@ -36,21 +34,19 @@ func Init() (*Config, error) {
 	// 监控config改变
 	watchConfig(conf, v)
 
-	if err := v.Unmarshal(&conf); err != nil {
-		fmt.Println("v.Unmarshal failed,err:", err)
-		return &conf, nil
+	if err = v.Unmarshal(&conf); err != nil {
+		log.Fatalf("config unmarshal, err: %+v", err)
 	}
 
-	fmt.Println("Config sets success，Conf:", &conf)
-	return &conf, nil
+	return
 }
 
-func watchConfig(conf Config, v *viper.Viper) {
+func watchConfig(conf *Config, v *viper.Viper) {
 	v.WatchConfig()
 
 	v.OnConfigChange(func(e fsnotify.Event) {
 		fmt.Println("conf file changed:", e.Name)
-		if err := v.Unmarshal(&conf); err != nil {
+		if err := v.Unmarshal(conf); err != nil {
 			fmt.Println("v.OnConfigChange -> v.Unmarshal(&conf) failed,err:", err)
 			return
 		}

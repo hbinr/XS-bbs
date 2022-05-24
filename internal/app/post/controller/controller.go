@@ -10,20 +10,23 @@ import (
 
 type PostController struct {
 	engine      *gin.Engine
-	postService service.IPostService
+	postService service.PostService
 }
 
-func NewPostController(e *gin.Engine, us service.IPostService) *PostController {
+func NewPostController(e *gin.Engine, us service.PostService) *PostController {
 	post := &PostController{
 		engine:      e,
 		postService: us,
 	}
+
 	g := e.Group("/api/post")
+
 	{
-		g.POST("/create", post.CreatePostHandle)
-		g.GET("/get", post.GetPostDetailHandle)
-		g.POST("/list", post.GetPostListHandle)
+		g.POST("/", post.CreatePostHandle)
+		g.GET("/info", post.GetPostDetailHandle)
+		g.GET("/list", post.GetPostListHandle)
 		g.POST("/vote", post.VoteForPost)
 	}
+
 	return post
 }

@@ -1,9 +1,9 @@
 package service
 
 import (
-	"go.uber.org/zap"
-	"xs.bbs/internal/app/user/dao"
+	"github.com/pkg/errors"
 	"xs.bbs/internal/app/user/model"
+	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/pkg/tool/hash"
 	"xs.bbs/pkg/tool/jwt"
 	"xs.bbs/pkg/tool/snowflake"
@@ -12,27 +12,35 @@ import (
 )
 
 // SignUp .
-func (u *userService) SignUp(param *model.SignUpParam) (dto *UserDto, err error) {
-	var uModel dao.UserModel
+func (u *userService) SignUp(param *model.SignUpParam) (resDto *UserDto, err error) {
+	var uModel model.User
+
 	if err = u.dao.CheckUserByUserName(param.Username); err != nil {
 		return
 	}
+
 	if err = u.dao.CheckUserByEmail(param.Email); err != nil {
 		return
 	}
+
 	if err = gconv.Struct(param, &uModel); err != nil {
+		err = errors.Wrap(e.ErrConvDataErr, err.Error())
 		return
 	}
+
 	uModel.UserID = snowflake.GenID()
 	// 密码加密
 	uModel.Password = hash.MD5String(param.Password)
+
 	if err = u.dao.Insert(&uModel); err != nil {
 		return
 	}
 
-	if err = gconv.Struct(uModel, &dto); err != nil {
+	if err = gconv.Struct(uModel, &resDto); err != nil {
+		err = errors.Wrap(e.ErrConvDataErr, err.Error())
 		return
 	}
+
 	return
 }
 
@@ -43,10 +51,12 @@ func (u *userService) Login(signIn *model.SignInParam) (token string, err error)
 	if user, err = u.dao.GetUserByName(signIn.Username); err != nil {
 		return
 	}
+
 	// 验证密码
 	if user.Password != hash.MD5String(signIn.Password) {
 		return
 	}
+
 	// 生成token
 	return jwt.GenToken(user.UserID)
 }
@@ -66,28 +76,33 @@ func (u *userService) Update(user *UserDto) error {
 }
 
 // SelectByName 根据用户名查询用户
-func (u *userService) SelectByName(userName string) (*UserDto, error) {
-	uModel, err := u.dao.GetUserByName(userName)
-	if err != nil {
-		return nil, err
+func (u *userService) SelectByName(userName string) (resDto *UserDto, err error) {
+	var uModel *model.User
+
+	if uModel, err = u.dao.GetUserByName(userName); err != nil {
+		return
 	}
-	var uDto UserDto
-	if err = gconv.Struct(uModel, &uDto); err != nil {
-		return nil, err
+
+	if err = gconv.Struct(uModel, &resDto); err != nil {
+		err = errors.Wrap(e.ErrConvDataErr, err.Error())
+		return
 	}
-	return &uDto, nil
+
+	return
 }
 
 // SelectByID 根据用户ID查询用户
-func (u *userService) SelectByID(userID int64) (*UserDto, error) {
-	uModel, err := u.dao.GetUserByID(userID)
-	if err != nil {
-		zap.L().Error("userDao.GetUserByID", zap.Error(err), zap.Int64("userID", userID))
-		return nil, err
+func (u *userService) SelectByID(userID int64) (resDto *UserDto, err error) {
+	var uModel *model.User
+
+	if uModel, err = u.dao.GetUserByID(userID); err != nil {
+		return
 	}
-	var uDto UserDto
-	if err = gconv.Struct(uModel, &uDto); err != nil {
-		return nil, err
+
+	if err = gconv.Struct(uModel, &resDto); err != nil {
+		err = errors.Wrap(e.ErrConvDataErr, err.Error())
+		return
 	}
-	return &uDto, nil
+
+	return
 }

@@ -15,8 +15,12 @@ log:
   max_backups: 7
 
 mysql:
+<<<<<<< HEAD
   addr: "127.0.0.1:4000"
   dsn: "root:@tcp(127.0.0.1:4000)/xs-bbs?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8mb4"
+=======
+  dsn: "root:123456@tcp(127.0.0.1:3306)/bbs?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
+>>>>>>> bfad5a40e174b58b12e3cabfaf2c7618ef5f608b
   log_mode: false
   max_open_conns: 10
   max_idle_conns: 10

@@ -1,34 +1,34 @@
 package service
 
 import (
-	"xs.bbs/internal/app/community/dao"
 	"xs.bbs/internal/app/community/model"
+	"xs.bbs/internal/app/community/repository"
 )
 
-var _ ICommunityService = (*communityService)(nil)
+var _ CommunityService = (*communityService)(nil)
 
 // CommunityServiceSet CommunityServiceSet依赖注入
 //var CommunityServiceSet = wire.NewSet(
 //	wire.Struct(new(CommunityService), "*"),
-//	wire.Bind(new(ICommunityService), new(*CommunityService)),
+//	wire.Bind(new(CommunityService), new(*CommunityService)),
 //)
 
 type (
 	CommunityDto     = model.CommunityDto
 	communityService struct {
-		dao dao.ICommunityDao
+		dao repository.CommunityRepo
 	}
 
-	// ICommunityService 文章标签接口
-	ICommunityService interface {
+	// CommunityService 文章标签接口
+	CommunityService interface {
 		// GetCommunityList 获取所有文章标签
-		GetCommunityList() ([]CommunityDto, error)
+		GetCommunityList() ([]*CommunityDto, error)
 		// GetCommunityDetailByID 根据社区id获取社区详情
 		GetCommunityDetailByID(int64) (*CommunityDto, error)
 	}
 )
 
-func NewCommunityService(dao dao.ICommunityDao) ICommunityService {
+func NewCommunityService(dao repository.CommunityRepo) CommunityService {
 	return &communityService{
 		dao: dao,
 	}

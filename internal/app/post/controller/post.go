@@ -3,9 +3,9 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"xs.bbs/internal/app/post/model"
-	"xs.bbs/internal/pkg/common"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
+	"xs.bbs/internal/pkg/util"
 )
 
 func (p *PostController) CreatePostHandle(c *gin.Context) {
@@ -14,20 +14,24 @@ func (p *PostController) CreatePostHandle(c *gin.Context) {
 		userID    int64
 		postParam model.PostParam
 	)
+
 	if errStr := ginx.BindAndValid(c, &postParam); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CodeInvalidParams, errStr)
+		ginx.RespErrorWithMsg(c, e.CodeInvalidParams, errStr)
 		return
 	}
+
 	if userID, err = ginx.GetCurrentUserID(c); err != nil {
-		ginx.ResponseError(c, e.CodeNeedLogin)
+		ginx.RespError(c, e.CodeNeedLogin)
 		return
 	}
+
 	postParam.AuthorID = userID
 	if err = p.postService.Create(&postParam); err != nil {
-		ginx.ResponseError(c, e.CodeError)
+		ginx.RespError(c, e.CodeError)
 		return
 	}
-	ginx.ResponseSuccess(c, nil)
+
+	ginx.RespSuccess(c, nil)
 }
 
 func (p *PostController) GetPostDetailHandle(c *gin.Context) {
@@ -38,14 +42,16 @@ func (p *PostController) GetPostDetailHandle(c *gin.Context) {
 	)
 
 	if pID, err = ginx.QueryInt("postID", c); err != nil {
-		ginx.ResponseError(c, e.CodeInvalidParams)
+		ginx.RespError(c, e.CodeInvalidParams)
 		return
 	}
+
 	if dto, err = p.postService.GetPostByID(pID); err != nil {
-		ginx.ResponseError(c, e.CodeError)
+		ginx.RespErrorWithMsg(c, e.CodeError, err.Error())
 		return
 	}
-	ginx.ResponseSuccess(c, dto)
+
+	ginx.RespSuccess(c, dto)
 }
 
 func (p *PostController) GetPostListHandle(c *gin.Context) {
@@ -54,25 +60,30 @@ func (p *PostController) GetPostListHandle(c *gin.Context) {
 		total int64
 		posts []*model.PostDetailDto
 	)
-	pageInfo := common.PageInfo{
+
+	pageInfo := util.PageInfo{
 		Page:     1,
 		PageSize: 5,
 	}
+
 	if errStr := ginx.BindAndValid(c, &pageInfo); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CodeInvalidParams, errStr)
+		ginx.RespErrorWithMsg(c, e.CodeInvalidParams, errStr)
 		return
 	}
+
 	if posts, total, err = p.postService.GetPostListByIDs(&pageInfo); err != nil {
-		ginx.ResponseError(c, e.CodeError)
+		ginx.RespError(c, e.CodeError)
 		return
 	}
-	pageRes := &common.PageResult{
+
+	pageRes := &util.PageResult{
 		List:     posts,
 		Total:    total,
 		Page:     pageInfo.Page,
 		PageSize: pageInfo.PageSize,
 	}
-	ginx.ResponseSuccess(c, pageRes)
+
+	ginx.RespSuccess(c, pageRes)
 }
 
 func (p *PostController) VoteForPost(c *gin.Context) {
@@ -81,18 +92,21 @@ func (p *PostController) VoteForPost(c *gin.Context) {
 		userID    int64
 		voteParam model.PostVoteParam
 	)
-	if errStr := ginx.BindAndValid(c, &voteParam); errStr != "" {
-		ginx.ResponseErrorWithMsg(c, e.CodeInvalidParams, errStr)
-		return
-	}
-	if userID, err = ginx.GetCurrentUserID(c); err != nil {
-		ginx.ResponseError(c, e.CodeError)
-		return
-	}
-	if err = p.postService.Vote(userID, &voteParam); err != nil {
-		ginx.ResponseError(c, e.CodeError)
-		return
-	}
-	ginx.ResponseSuccess(c, nil)
 
+	if errStr := ginx.BindAndValid(c, &voteParam); errStr != "" {
+		ginx.RespErrorWithMsg(c, e.CodeInvalidParams, errStr)
+		return
+	}
+
+	if userID, err = ginx.GetCurrentUserID(c); err != nil {
+		ginx.RespError(c, e.CodeError)
+		return
+	}
+
+	if err = p.postService.Vote(userID, &voteParam); err != nil {
+		ginx.RespError(c, e.CodeError)
+		return
+	}
+
+	ginx.RespSuccess(c, nil)
 }
