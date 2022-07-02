@@ -13,7 +13,7 @@ var (
 	Model = &model.User{}
 	// 不使用wire依赖注入
 	//Set   = wire.NewSet(
-	//	dao.UserDaoSet,
+	//	repo.UserDaoSet,
 	//	service.UserServiceSet,
 	//	controller.UserControllerSet,
 	//)

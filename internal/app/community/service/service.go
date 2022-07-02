@@ -16,7 +16,7 @@ var _ CommunityService = (*communityService)(nil)
 type (
 	CommunityDto     = model.CommunityDto
 	communityService struct {
-		dao repository.CommunityRepo
+		repo repository.CommunityRepo
 	}
 
 	// CommunityService 文章标签接口
@@ -28,8 +28,8 @@ type (
 	}
 )
 
-func NewCommunityService(dao repository.CommunityRepo) CommunityService {
+func NewCommunityService(repo repository.CommunityRepo) CommunityService {
 	return &communityService{
-		dao: dao,
+		repo: repo,
 	}
 }

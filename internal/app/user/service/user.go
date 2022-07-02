@@ -15,11 +15,11 @@ import (
 func (u *userService) SignUp(param *model.SignUpParam) (resDto *UserDto, err error) {
 	var uModel model.User
 
-	if err = u.dao.CheckUserByUserName(param.Username); err != nil {
+	if err = u.repo.CheckUserByUserName(param.Username); err != nil {
 		return
 	}
 
-	if err = u.dao.CheckUserByEmail(param.Email); err != nil {
+	if err = u.repo.CheckUserByEmail(param.Email); err != nil {
 		return
 	}
 
@@ -32,7 +32,7 @@ func (u *userService) SignUp(param *model.SignUpParam) (resDto *UserDto, err err
 	// 密码加密
 	uModel.Password = hash.MD5String(param.Password)
 
-	if err = u.dao.Insert(&uModel); err != nil {
+	if err = u.repo.Insert(&uModel); err != nil {
 		return
 	}
 
@@ -48,7 +48,7 @@ func (u *userService) SignUp(param *model.SignUpParam) (resDto *UserDto, err err
 func (u *userService) Login(signIn *model.SignInParam) (token string, err error) {
 	var user *model.User
 	// 获取用户信息
-	if user, err = u.dao.GetUserByName(signIn.Username); err != nil {
+	if user, err = u.repo.GetUserByName(signIn.Username); err != nil {
 		return
 	}
 
@@ -63,7 +63,7 @@ func (u *userService) Login(signIn *model.SignInParam) (token string, err error)
 
 // Delete 根据用户ID删除用户
 func (u *userService) Delete(userID int64) bool {
-	return u.dao.Delete(userID)
+	return u.repo.Delete(userID)
 }
 
 // Update 根据用户ID修改用户
@@ -72,14 +72,14 @@ func (u *userService) Update(user *UserDto) error {
 	if err := gconv.Struct(user, &uModel); err != nil {
 		return err
 	}
-	return u.dao.Update(&uModel)
+	return u.repo.Update(&uModel)
 }
 
 // SelectByName 根据用户名查询用户
 func (u *userService) SelectByName(userName string) (resDto *UserDto, err error) {
 	var uModel *model.User
 
-	if uModel, err = u.dao.GetUserByName(userName); err != nil {
+	if uModel, err = u.repo.GetUserByName(userName); err != nil {
 		return
 	}
 
@@ -95,7 +95,7 @@ func (u *userService) SelectByName(userName string) (resDto *UserDto, err error)
 func (u *userService) SelectByID(userID int64) (resDto *UserDto, err error) {
 	var uModel *model.User
 
-	if uModel, err = u.dao.GetUserByID(userID); err != nil {
+	if uModel, err = u.repo.GetUserByID(userID); err != nil {
 		return
 	}
 

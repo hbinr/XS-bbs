@@ -16,7 +16,7 @@ var _ UserService = (*userService)(nil)
 type (
 	UserDto     = model.UserDto
 	userService struct {
-		dao repository.UserRepo
+		repo repository.UserRepo
 	}
 
 	UserService interface {
@@ -31,8 +31,8 @@ type (
 	}
 )
 
-func NewUserService(dao repository.UserRepo) UserService {
+func NewUserService(repo repository.UserRepo) UserService {
 	return &userService{
-		dao: dao,
+		repo: repo,
 	}
 }

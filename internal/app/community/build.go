@@ -12,14 +12,14 @@ import (
 var (
 	Model = &model.Community{}
 	//Set   = wire.NewSet(
-	//	dao.CommunityDaoSet,
+	//	repo.CommunityDaoSet,
 	//	service.CommunityServiceSet,
 	//	controller.CommunityControllerSet,
 	//)
 )
 
 func Init(engine *gin.Engine, db *gorm.DB) *controller.CommunityController {
-	dao := repository.NewCommunityRepo(db)
-	cs := service.NewCommunityService(dao)
+	repo := repository.NewCommunityRepo(db)
+	cs := service.NewCommunityService(repo)
 	return controller.NewCommunityController(engine, cs)
 }

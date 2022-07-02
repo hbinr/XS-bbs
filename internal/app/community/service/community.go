@@ -10,7 +10,7 @@ import (
 // GetCommunityList 获取所有文章标签
 func (s *communityService) GetCommunityList() (resList []*CommunityDto, err error) {
 	var communityList []model.Community
-	communityList, err = s.dao.GetCommunityList()
+	communityList, err = s.repo.GetCommunityList()
 	for _, c := range communityList {
 		dto := new(CommunityDto)
 		dto.CommunityID = c.CommunityID
@@ -26,7 +26,7 @@ func (s *communityService) GetCommunityList() (resList []*CommunityDto, err erro
 func (s *communityService) GetCommunityDetailByID(ID int64) (commDto *CommunityDto, err error) {
 	var commuModel *model.Community
 
-	if commuModel, err = s.dao.GetCommunityDetailByID(ID); err != nil {
+	if commuModel, err = s.repo.GetCommunityDetailByID(ID); err != nil {
 		return nil, err
 	}
 	if err = gconv.Struct(commuModel, &commDto); err != nil {
