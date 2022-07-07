@@ -20,8 +20,8 @@ var codeMsgMap = map[ResCode]string{
 }
 
 // Msg .
-func (c ResCode) Msg() string {
-	msg, ok := codeMsgMap[c]
+func (code ResCode) Msg() string {
+	msg, ok := codeMsgMap[code]
 	if !ok {
 		msg = codeMsgMap[CodeError]
 	}

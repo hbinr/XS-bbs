@@ -10,12 +10,12 @@ import (
 func GetCurrentUserID(c *gin.Context) (userID int64, err error) {
 	uid, ok := c.Get(constant.KeyCtxUserID)
 	if !ok {
-		err = e.ErrorUserNotLogin
+		err = e.ErrUserNotLogin
 		return
 	}
 	userID, ok = uid.(int64)
 	if !ok {
-		err = e.ErrorUserNotLogin
+		err = e.ErrUserNotLogin
 		return
 	}
 	return
