@@ -20,7 +20,7 @@ var (
 )
 
 func Init(engine *gin.Engine, db *gorm.DB) *controller.UserController {
-	userDao := repository.NewUserRepo(db)
-	userService := service.NewUserService(userDao)
+	userRepo := repository.NewUserRepo(db)
+	userService := service.NewUserService(userRepo)
 	return controller.NewUserController(engine, userService)
 }

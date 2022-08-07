@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v9"
 	"gorm.io/gorm"
 	"xs.bbs/internal/app/post/model"
 )

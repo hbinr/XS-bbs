@@ -17,9 +17,9 @@ var _ PostService = (*postService)(nil)
 
 type (
 	postService struct {
-		postDao      post.PostRepo
-		userDao      user.UserRepo
-		communityDao community.CommunityRepo
+		postRepo      post.PostRepo
+		userRepo      user.UserRepo
+		communityRepo community.CommunityRepo
 	}
 	PostService interface {
 		Create(post *model.PostParam) error
@@ -32,8 +32,8 @@ type (
 func NewPostService(post post.PostRepo, user user.UserRepo,
 	commu community.CommunityRepo) PostService {
 	return &postService{
-		postDao:      post,
-		userDao:      user,
-		communityDao: commu,
+		postRepo:      post,
+		userRepo:      user,
+		communityRepo: commu,
 	}
 }

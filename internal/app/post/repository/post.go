@@ -5,7 +5,7 @@ import (
 
 	"xs.bbs/internal/pkg/constant"
 
-	"github.com/go-redis/redis"
+	"github.com/go-redis/redis/v9"
 	"xs.bbs/internal/app/post/model"
 	"xs.bbs/pkg/tool/snowflake"
 )

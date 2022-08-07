@@ -7,17 +7,17 @@ import (
 
 	"xs.bbs/internal/app/post/controller"
 
-	commuDao "xs.bbs/internal/app/community/repository"
+	commuRepo "xs.bbs/internal/app/community/repository"
 	"xs.bbs/internal/app/post/model"
-	postDao "xs.bbs/internal/app/post/repository"
+	postRepo "xs.bbs/internal/app/post/repository"
 	"xs.bbs/internal/app/post/service"
-	userDao "xs.bbs/internal/app/user/repository"
+	userRepo "xs.bbs/internal/app/user/repository"
 )
 
 var (
 	Model = &model.Post{}
 	//Set   = wire.NewSet(
-	//	repo.PostDaoSet,
+	//	repo.PostRepoSet,
 	//	service.PostServiceSet,
 	//	controller.PostControllerSet,
 	//)
@@ -27,7 +27,7 @@ var (
 	笔记：
 	曾经想 service.NewPostService()修改为service.NewService(store)
 
-	其中store是一个接口，嵌套了全部数据访问接口: PostDao + userRepo + communityRepo
+	其中store是一个接口，嵌套了全部数据访问接口: PostRepo + userRepo + communityRepo
 
 	然后service层可以链式调用：
 		c.repository.Post().Find(args1)....
@@ -41,9 +41,9 @@ var (
 		3.只管命令不要询问，直接做具体的事，不要去找是哪个接口，链式调用就出现了先找到Post接口，然后再调用其实现
 */
 func Init(engine *gin.Engine, db *gorm.DB, rdb *redis.Client) *controller.PostController {
-	post := postDao.NewPostRepo(db, rdb)
-	user := userDao.NewUserRepo(db)
-	community := commuDao.NewCommunityRepo(db)
+	post := postRepo.NewPostRepo(db, rdb)
+	user := userRepo.NewUserRepo(db)
+	community := commuRepo.NewCommunityRepo(db)
 	postService := service.NewPostService(post, user, community)
 	return controller.NewPostController(engine, postService)
 }

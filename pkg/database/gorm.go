@@ -2,10 +2,8 @@ package database
 
 import (
 	"database/sql"
-	"os"
 
 	"go.uber.org/zap"
-	"xs.bbs/internal/app"
 	"xs.bbs/pkg/conf"
 
 	"gorm.io/gorm/schema"
@@ -21,7 +19,7 @@ var (
 	sqlDB *sql.DB
 )
 
-//Init 初始化MySQL
+// Init 初始化MySQL
 func Init(cfg *conf.Config) (db *gorm.DB, err error) {
 	mysqlConfig := mysql.Config{
 		DSN:                       cfg.DSN, // DSN data source name
@@ -41,20 +39,9 @@ func Init(cfg *conf.Config) (db *gorm.DB, err error) {
 		zap.L().Error("db.db() failed", zap.Error(err))
 		return
 	}
-	gormDBTables(db)
 	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
 	return
-}
-
-// gormDBTables 注册数据库表专用
-func gormDBTables(db *gorm.DB) {
-	err := db.AutoMigrate(app.Models...)
-	if err != nil {
-		zap.L().Error("register table failed", zap.Error(err))
-		os.Exit(0)
-	}
-	zap.L().Info("register table success")
 }
 
 // config 根据配置决定是否开启日志

@@ -33,5 +33,6 @@ type (
 )
 
 func NewUserRepo(db *gorm.DB) UserRepo {
+	db.AutoMigrate(&model.User{})
 	return &userRepo{db: db}
 }

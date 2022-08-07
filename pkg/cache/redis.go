@@ -1,12 +1,12 @@
 package cache
 
 import (
+	"context"
 	"fmt"
+	"github.com/go-redis/redis/v9"
 
 	"go.uber.org/zap"
 	"xs.bbs/pkg/conf"
-
-	"github.com/go-redis/redis"
 )
 
 var rdb *redis.Client
@@ -20,14 +20,14 @@ func Init(cfg *conf.Config) (*redis.Client, error) {
 		PoolSize:     cfg.PoolSize,
 		MinIdleConns: cfg.MinIdleConns,
 	})
-	if _, err := rdb.Ping().Result(); err != nil {
+	if _, err := rdb.Ping(context.Background()).Result(); err != nil {
 		zap.L().Error("redis ping failed", zap.Error(err))
 		return nil, err
 	}
 	return rdb, nil
 }
 
-// Close 关闭redis clent连接资源
+// Close 关闭redis client连接资源
 func Close() {
 	_ = rdb.Close()
 }
