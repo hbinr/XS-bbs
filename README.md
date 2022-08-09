@@ -28,8 +28,9 @@ Xiang Shou 论坛，XS-bbs 基于gin + gorm + go-redis 实战，面向接口开�
 │   ├── cache          # 缓存初始化封装
 │   ├── conf           # 配置定义及初始化封装
 │   ├── database       # 数据库初始化封装
-│   ├── log            # 日志库初始化封装
-│   └── utils           # 一些工具封装
+│   ├── logger         # 日志库初始化封装
+│   ├── servers        # http 路由初识化、注册相关,后续可以支持 grpc server 
+│   └── utils          # 一些工具封装
 ├── config.yaml        # 配置文件
 ├── go.mod
 ├── go.sum
