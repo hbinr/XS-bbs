@@ -29,7 +29,7 @@ Xiang Shou 论坛，XS-bbs 基于gin + gorm + go-redis 实战，面向接口开�
 │   ├── conf           # 配置定义及初始化封装
 │   ├── database       # 数据库初始化封装
 │   ├── log            # 日志库初始化封装
-│   └── tool           # 一些工具封装
+│   └── utils           # 一些工具封装
 ├── config.yaml        # 配置文件
 ├── go.mod
 ├── go.sum
