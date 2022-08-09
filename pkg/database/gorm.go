@@ -39,8 +39,8 @@ func Init(cfg *conf.Config) (db *gorm.DB, err error) {
 		zap.L().Error("db.db() failed", zap.Error(err))
 		return
 	}
-	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
-	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
+	sqlDB.SetMaxIdleConns(cfg.MaxIdleCons)
+	sqlDB.SetMaxOpenConns(cfg.MaxOpenCons)
 	return
 }
 

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"context"
+
 	"gorm.io/gorm"
 	"xs.bbs/internal/app/community/model"
 )
@@ -19,8 +21,8 @@ type (
 
 	// CommunityRepo 文章标签接口
 	CommunityRepo interface {
-		GetCommunityList() ([]model.Community, error)
-		GetCommunityDetailByID(int64) (*model.Community, error)
+		GetCommunityList(context.Context) ([]model.Community, error)
+		GetCommunityDetailByID(context.Context, int64) (*model.Community, error)
 	}
 )
 

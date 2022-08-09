@@ -8,8 +8,8 @@ import (
 )
 
 // GetCommunityList 获取所有文章标签
-func (a *CommunityController) GetCommunityList(c *gin.Context) {
-	resList, err := a.communityService.GetCommunityList()
+func (cc *CommunityController) GetCommunityList(c *gin.Context) {
+	resList, err := cc.communityService.GetCommunityList(c.Request.Context())
 	if err != nil {
 
 		ginx.RespError(c, e.CodeError)
@@ -19,7 +19,7 @@ func (a *CommunityController) GetCommunityList(c *gin.Context) {
 }
 
 // GetCommunityDetail 获取所有文章标签
-func (a *CommunityController) GetCommunityDetail(c *gin.Context) {
+func (cc *CommunityController) GetCommunityDetail(c *gin.Context) {
 	var (
 		id     int64
 		err    error
@@ -30,7 +30,7 @@ func (a *CommunityController) GetCommunityDetail(c *gin.Context) {
 		return
 	}
 
-	resDto, err = a.communityService.GetCommunityDetailByID(id)
+	resDto, err = cc.communityService.GetCommunityDetailByID(c.Request.Context(), id)
 
 	switch err {
 	case nil:

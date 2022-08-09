@@ -1,25 +1,27 @@
 package service
 
 import (
+	"context"
+
 	"github.com/pkg/errors"
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/pkg/constant/e"
-	"xs.bbs/pkg/tool/hash"
-	"xs.bbs/pkg/tool/jwt"
-	"xs.bbs/pkg/tool/snowflake"
+	"xs.bbs/pkg/utils/hash"
+	"xs.bbs/pkg/utils/jwt"
+	"xs.bbs/pkg/utils/snowflake"
 
 	"github.com/gogf/gf/util/gconv"
 )
 
-// SignUp .
-func (u *userService) SignUp(param *model.SignUpParam) (resDto *UserDto, err error) {
+// Register .
+func (u *userService) Register(ctx context.Context, param *model.RegisterReq) (resDto *UserDto, err error) {
 	var uModel model.User
 
-	if err = u.repo.CheckUserByUserName(param.Username); err != nil {
+	if err = u.repo.CheckUserByUserName(ctx, param.Username); err != nil {
 		return
 	}
 
-	if err = u.repo.CheckUserByEmail(param.Email); err != nil {
+	if err = u.repo.CheckUserByEmail(ctx, param.Email); err != nil {
 		return
 	}
 
@@ -32,7 +34,7 @@ func (u *userService) SignUp(param *model.SignUpParam) (resDto *UserDto, err err
 	// 密码加密
 	uModel.Password = hash.MD5String(param.Password)
 
-	if err = u.repo.Insert(&uModel); err != nil {
+	if err = u.repo.Insert(ctx, &uModel); err != nil {
 		return
 	}
 
@@ -45,10 +47,10 @@ func (u *userService) SignUp(param *model.SignUpParam) (resDto *UserDto, err err
 }
 
 // Login 登陆
-func (u *userService) Login(signIn *model.SignInParam) (token string, err error) {
+func (u *userService) Login(ctx context.Context, signIn *model.LoginReq) (token string, err error) {
 	var user *model.User
 	// 获取用户信息
-	if user, err = u.repo.GetUserByName(signIn.Username); err != nil {
+	if user, err = u.repo.GetUserByName(ctx, signIn.Username); err != nil {
 		return
 	}
 
@@ -62,24 +64,24 @@ func (u *userService) Login(signIn *model.SignInParam) (token string, err error)
 }
 
 // Delete 根据用户ID删除用户
-func (u *userService) Delete(userID int64) bool {
-	return u.repo.Delete(userID)
+func (u *userService) Delete(ctx context.Context, userID int64) bool {
+	return u.repo.Delete(ctx, userID)
 }
 
 // Update 根据用户ID修改用户
-func (u *userService) Update(user *UserDto) error {
+func (u *userService) Update(ctx context.Context, user *UserDto) error {
 	var uModel model.User
 	if err := gconv.Struct(user, &uModel); err != nil {
 		return err
 	}
-	return u.repo.Update(&uModel)
+	return u.repo.Update(ctx, &uModel)
 }
 
 // SelectByName 根据用户名查询用户
-func (u *userService) SelectByName(userName string) (resDto *UserDto, err error) {
+func (u *userService) SelectByName(ctx context.Context, userName string) (resDto *UserDto, err error) {
 	var uModel *model.User
 
-	if uModel, err = u.repo.GetUserByName(userName); err != nil {
+	if uModel, err = u.repo.GetUserByName(ctx, userName); err != nil {
 		return
 	}
 
@@ -92,10 +94,10 @@ func (u *userService) SelectByName(userName string) (resDto *UserDto, err error)
 }
 
 // SelectByID 根据用户ID查询用户
-func (u *userService) SelectByID(userID int64) (resDto *UserDto, err error) {
+func (u *userService) SelectByID(ctx context.Context, userID int64) (resDto *UserDto, err error) {
 	var uModel *model.User
 
-	if uModel, err = u.repo.GetUserByID(userID); err != nil {
+	if uModel, err = u.repo.GetUserByID(ctx, userID); err != nil {
 		return
 	}
 

@@ -26,7 +26,7 @@ func (p *PostController) CreatePostHandle(c *gin.Context) {
 	}
 
 	postParam.AuthorID = userID
-	if err = p.postService.Create(&postParam); err != nil {
+	if err = p.postService.Create(c.Request.Context(), &postParam); err != nil {
 		ginx.RespError(c, e.CodeError)
 		return
 	}
@@ -46,7 +46,7 @@ func (p *PostController) GetPostDetailHandle(c *gin.Context) {
 		return
 	}
 
-	if dto, err = p.postService.GetPostByID(pID); err != nil {
+	if dto, err = p.postService.GetPostByID(c.Request.Context(), pID); err != nil {
 		ginx.RespErrorWithMsg(c, e.CodeError, err.Error())
 		return
 	}
@@ -71,7 +71,7 @@ func (p *PostController) GetPostListHandle(c *gin.Context) {
 		return
 	}
 
-	if posts, total, err = p.postService.GetPostListByIDs(&pageInfo); err != nil {
+	if posts, total, err = p.postService.GetPostListByIDs(c.Request.Context(), &pageInfo); err != nil {
 		ginx.RespError(c, e.CodeError)
 		return
 	}
@@ -103,7 +103,7 @@ func (p *PostController) VoteForPost(c *gin.Context) {
 		return
 	}
 
-	if err = p.postService.Vote(userID, &voteParam); err != nil {
+	if err = p.postService.Vote(c.Request.Context(), userID, &voteParam); err != nil {
 		ginx.RespError(c, e.CodeError)
 		return
 	}

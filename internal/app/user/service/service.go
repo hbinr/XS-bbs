@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	"xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/app/user/repository"
 )
@@ -20,14 +22,14 @@ type (
 	}
 
 	UserService interface {
-		// SignUp 注册
-		SignUp(signUp *model.SignUpParam) (*UserDto, error)
+		// Register 注册
+		Register(ctx context.Context, signUp *model.RegisterReq) (*UserDto, error)
 		// Login 登陆
-		Login(signIn *model.SignInParam) (string, error)
-		Delete(int64) bool
-		Update(user *model.UserDto) error
-		SelectByID(id int64) (*UserDto, error)
-		SelectByName(userName string) (*UserDto, error)
+		Login(ctx context.Context, signIn *model.LoginReq) (string, error)
+		Delete(ctx context.Context, id int64) bool
+		Update(ctx context.Context, user *model.UserDto) error
+		SelectByID(ctx context.Context, id int64) (*UserDto, error)
+		SelectByName(ctx context.Context, userName string) (*UserDto, error)
 	}
 )
 

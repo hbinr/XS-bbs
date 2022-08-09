@@ -13,19 +13,20 @@ type CommunityController struct {
 	communityService service.CommunityService
 }
 
-func NewCommunityController(e *gin.Engine, as service.CommunityService) *CommunityController {
-	community := &CommunityController{
-		engine:           e,
-		communityService: as,
+func NewCommunityController(service service.CommunityService) *CommunityController {
+	return &CommunityController{
+		communityService: service,
 	}
+}
 
-	e.Use(middleware.JWTAuth())
-	g := e.Group("/api/community")
+func (cc *CommunityController) RegisterHTTPRouter(r *gin.Engine) {
+	r.Use(middleware.JWTAuth())
+	g := r.Group("/api/community")
 
 	{
-		g.GET("/list", community.GetCommunityList)
-		g.GET("/info", community.GetCommunityDetail)
+		g.GET("/list", cc.GetCommunityList)
+		g.GET("/info", cc.GetCommunityDetail)
 	}
 
-	return community
+	return
 }

@@ -1,7 +1,6 @@
 package post
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v9"
 	"gorm.io/gorm"
 
@@ -15,7 +14,7 @@ import (
 )
 
 var (
-	Model = &model.Post{}
+	Entity = &model.Post{}
 	//Set   = wire.NewSet(
 	//	repo.PostRepoSet,
 	//	service.PostServiceSet,
@@ -42,10 +41,10 @@ var (
 	    2.不要链式调用方法，传进去的一整条调用链对函数来说，都是无关的耦合，只会让代码更 hard to change，让工程师惧怕去修改
 		3.只管命令不要询问，直接做具体的事，不要去找是哪个接口，链式调用就出现了先找到Post接口，然后再调用其实现
 */
-func Init(engine *gin.Engine, db *gorm.DB, rdb *redis.Client) *controller.PostController {
+func Build(db *gorm.DB, rdb *redis.Client) *controller.PostController {
 	post := postRepo.NewPostRepo(db, rdb)
 	user := userRepo.NewUserRepo(db)
 	community := commuRepo.NewCommunityRepo(db)
 	postService := service.NewPostService(post, user, community)
-	return controller.NewPostController(engine, postService)
+	return controller.NewPostController(postService)
 }

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/pkg/errors"
@@ -12,35 +13,35 @@ import (
 	user "xs.bbs/internal/app/user/model"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/util"
-	"xs.bbs/pkg/tool/snowflake"
+	"xs.bbs/pkg/utils/snowflake"
 )
 
-func (p *postService) Create(parm *post.PostParam) (err error) {
+func (p *postService) Create(ctx context.Context, parm *post.PostParam) (err error) {
 	var postModel post.Post
 	if err = gconv.Struct(parm, &postModel); err != nil {
 		err = errors.Wrap(e.ErrConvDataErr, err.Error())
 		return
 	}
 	postModel.PostID = snowflake.GenID()
-	return p.postDao.Create(&postModel)
+	return p.postRepo.Create(ctx, &postModel)
 }
 
-func (p *postService) GetPostByID(postID int64) (dto *post.PostDetailDto, err error) {
+func (p *postService) GetPostByID(ctx context.Context, postID int64) (dto *post.PostDetailDto, err error) {
 	var (
 		postModel      *post.Post
 		userModel      *user.User
 		communityModel *community.Community
 	)
 	// 1.获取帖子
-	if postModel, err = p.postDao.GetPostByID(postID); err != nil {
+	if postModel, err = p.postRepo.GetPostByID(ctx, postID); err != nil {
 		return
 	}
 	// 2.获取作者信息
-	if userModel, err = p.userDao.GetUserByID(postModel.AuthorID); err != nil {
+	if userModel, err = p.userRepo.GetUserByID(ctx, postModel.AuthorID); err != nil {
 		return
 	}
 	// 3.获取社区信息
-	if communityModel, err = p.communityDao.GetCommunityDetailByID(postModel.CommunityID); err != nil {
+	if communityModel, err = p.communityRepo.GetCommunityDetailByID(ctx, postModel.CommunityID); err != nil {
 		return
 	}
 	if dto, err = ConvertToPostDetailDto(userModel, communityModel, postModel); err != nil {
@@ -51,25 +52,25 @@ func (p *postService) GetPostByID(postID int64) (dto *post.PostDetailDto, err er
 
 // GetPostListByIDs 根据post_id切片获取post列表，并按照给定的post_id顺序返回
 
-func (p *postService) GetPostListByIDs(paging *util.PageInfo) (resList []*model.PostDetailDto, total int64, err error) {
+func (p *postService) GetPostListByIDs(ctx context.Context, paging *util.PageInfo) (resList []*model.PostDetailDto, total int64, err error) {
 	var (
 		postListM  []*post.Post
 		userM      *user.User
 		communityM *community.Community
 	)
 	// 1.获取帖子列表
-	if postListM, total, err = p.postDao.GetPostList(paging.PageSize, paging.Offset()); err != nil {
+	if postListM, total, err = p.postRepo.GetPostList(ctx, paging.PageSize, paging.Offset()); err != nil {
 		err = errors.Wrap(err, "service: GetPostList failed")
 		return
 	}
 	resList = make([]*model.PostDetailDto, 0, len(postListM))
 	for _, item := range postListM {
 		// 2.获取作者信息
-		if userM, err = p.userDao.GetUserByID(item.AuthorID); err != nil {
+		if userM, err = p.userRepo.GetUserByID(ctx, item.AuthorID); err != nil {
 			continue
 		}
 		// 3.获取社区信息
-		if communityM, err = p.communityDao.GetCommunityDetailByID(item.CommunityID); err != nil {
+		if communityM, err = p.communityRepo.GetCommunityDetailByID(ctx, item.CommunityID); err != nil {
 			continue
 		}
 		resDto := new(model.PostDetailDto)
@@ -81,7 +82,9 @@ func (p *postService) GetPostListByIDs(paging *util.PageInfo) (resList []*model.
 	return
 }
 
-func ConvertToPostDetailDto(userM *user.User, communityM *community.Community,
+func ConvertToPostDetailDto(
+	userM *user.User,
+	communityM *community.Community,
 	postM *post.Post) (dto *post.PostDetailDto, err error) {
 	var (
 		postDto      post.PostDto
@@ -104,6 +107,6 @@ func ConvertToPostDetailDto(userM *user.User, communityM *community.Community,
 	return
 }
 
-func (p *postService) Vote(userID int64, vote *model.PostVoteParam) (err error) {
-	return p.postDao.Vote(strconv.Itoa(int(userID)), strconv.Itoa(int(vote.PostID)), float64(vote.Direction))
+func (p *postService) Vote(ctx context.Context, userID int64, vote *model.PostVoteParam) (err error) {
+	return p.postRepo.Vote(ctx, strconv.Itoa(int(userID)), strconv.Itoa(int(vote.PostID)), float64(vote.Direction))
 }

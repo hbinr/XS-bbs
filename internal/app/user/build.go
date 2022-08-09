@@ -1,7 +1,6 @@
 package user
 
 import (
-	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"xs.bbs/internal/app/user/controller"
 	"xs.bbs/internal/app/user/model"
@@ -10,7 +9,7 @@ import (
 )
 
 var (
-	Model = &model.User{}
+	Entity = &model.User{}
 	// 不使用wire依赖注入
 	//Set   = wire.NewSet(
 	//	repo.UserDaoSet,
@@ -19,8 +18,8 @@ var (
 	//)
 )
 
-func Init(engine *gin.Engine, db *gorm.DB) *controller.UserController {
+func Build(db *gorm.DB) *controller.UserController {
 	userRepo := repository.NewUserRepo(db)
 	userService := service.NewUserService(userRepo)
-	return controller.NewUserController(engine, userService)
+	return controller.NewUserController(userService)
 }

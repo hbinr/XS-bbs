@@ -9,24 +9,22 @@ import (
 //	NewUserController)
 
 type UserController struct {
-	engine      *gin.Engine
 	userService service.UserService
 }
 
-func NewUserController(e *gin.Engine, us service.UserService) *UserController {
-	user := &UserController{
-		engine:      e,
+func NewUserController(us service.UserService) *UserController {
+	return &UserController{
 		userService: us,
 	}
+}
 
-	g := e.Group("/api/user")
+func (u *UserController) RegisterHTTPRouter(r *gin.Engine) {
+	g := r.Group("/api/user")
 
 	{
-		g.POST("/signup", user.SignUp)
-		g.POST("/signin", user.SignIn)
-		g.GET("/:userID", user.Get)
-		g.DELETE("/:userID", user.Delete)
+		g.POST("/signup", u.Register)
+		g.POST("/signin", u.Login)
+		g.GET("/:userID", u.Get)
+		g.DELETE("/:userID", u.Delete)
 	}
-
-	return user
 }

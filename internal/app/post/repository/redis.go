@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"math"
 	"time"
 
@@ -37,18 +38,18 @@ const (
 	scorePerVote     = 432 // 每一票值多少分
 )
 
-func (p *postRepo) Vote(userID, postID string, value float64) (err error) {
+func (p *postRepo) Vote(ctx context.Context, userID, postID string, value float64) (err error) {
 	// 1. 判断投票限制
 	// 去redis取帖子发布时间
-	postTime := p.rdb.ZScore(constant.RedisKey(constant.KeyPostTimeZSet), postID).Val()
+	postTime := p.rdb.ZScore(ctx, constant.RedisKey(constant.KeyPostTimeZSet), postID).Val()
 	if float64(time.Now().Unix())-postTime > oneWeekInSeconds { // 发帖超过一周不允许参与投票
 		return e.ErrVoteTimeExpire
 	}
 	// 2和3需要放到一个pipeline事务中操作
 
 	// 2. 更新贴子的分数
-	// 先查当前用户给当前帖子的投票记录  ?? todo
-	oldVal := p.rdb.ZScore(constant.RedisKey(constant.KeyPostVotedZSetPre+postID), userID).Val()
+	// 先查当前用户给当前帖子的投票记录
+	oldVal := p.rdb.ZScore(ctx, constant.RedisKey(constant.KeyPostVotedZSetPre+postID), userID).Val()
 	var op float64
 	// 如果当前投票值大于查询出oldVal
 	if value > oldVal {
@@ -59,16 +60,16 @@ func (p *postRepo) Vote(userID, postID string, value float64) (err error) {
 	diff := math.Abs(oldVal - value) // 计算两次投票的差值
 	pipeline := p.rdb.Pipeline()
 	// 更新贴子的分数
-	pipeline.ZIncrBy(constant.RedisKey(constant.KeyPostScoreZSet), op*diff*scorePerVote, postID)
+	pipeline.ZIncrBy(ctx, constant.RedisKey(constant.KeyPostScoreZSet), op*diff*scorePerVote, postID)
 	// 3. 记录用户为该贴子投票的数据
 	if value == 0 { // 如果未投票，删除
-		pipeline.ZRem(constant.RedisKey(constant.KeyPostVotedZSetPre+postID), userID)
+		pipeline.ZRem(ctx, constant.RedisKey(constant.KeyPostVotedZSetPre+postID), userID)
 	} else {
-		pipeline.ZAdd(constant.RedisKey(constant.KeyPostVotedZSetPre+postID), redis.Z{
+		pipeline.ZAdd(ctx, constant.RedisKey(constant.KeyPostVotedZSetPre+postID), redis.Z{
 			Score:  value, // 赞成票还是反对票
 			Member: userID,
 		})
 	}
-	_, err = pipeline.Exec()
+	_, err = pipeline.Exec(ctx)
 	return
 }

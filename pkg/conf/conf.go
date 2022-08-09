@@ -29,18 +29,18 @@ type LogConfig struct {
 
 // MySQLConfig mysql配置
 type MySQLConfig struct {
-	DSN          string `mapstructure:"dsn"`            // write data source name.
-	LogMode      bool   `mapstructure:"log_mode"`       // whether to open the log
-	MaxOpenConns int    `mapstructure:"max_open_conns"` // max open conns
-	MaxIdleConns int    `mapstructure:"max_idle_conns"` // max idle conns
+	DSN         string `mapstructure:"dsn"`           // write data source name.
+	LogMode     bool   `mapstructure:"log_mode"`      // whether to open the log
+	MaxOpenCons int    `mapstructure:"max_open_cons"` // max open cons
+	MaxIdleCons int    `mapstructure:"max_idle_cons"` // max idle cons
 }
 
 // RedisConfig redis配置
 type RedisConfig struct {
-	Host         string `mapstructure:"host"`
-	Password     string `mapstructure:"password"`
-	Port         int    `mapstructure:"port"`
-	DB           int    `mapstructure:"db"`
-	PoolSize     int    `mapstructure:"pool_size"`
-	MinIdleConns int    `mapstructure:"min_idle_conns"`
+	Host        string `mapstructure:"host"`
+	Password    string `mapstructure:"password"`
+	Port        int    `mapstructure:"port"`
+	DB          int    `mapstructure:"db"`
+	PoolSize    int    `mapstructure:"pool_size"`
+	MinIdleCons int    `mapstructure:"min_idle_cons"`
 }

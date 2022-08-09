@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"context"
 	"errors"
 
 	"xs.bbs/internal/app/community/model"
@@ -10,8 +11,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func (c *communityRepo) GetCommunityList() (resList []model.Community, err error) {
-	if err = c.db.Find(&resList).Error; err != nil {
+func (c *communityRepo) GetCommunityList(ctx context.Context) (resList []model.Community, err error) {
+	if err = c.db.WithContext(ctx).Find(&resList).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			zap.L().Error("repo.GetCommunityList no data", zap.Error(err))
 			err = gorm.ErrRecordNotFound
@@ -21,9 +22,9 @@ func (c *communityRepo) GetCommunityList() (resList []model.Community, err error
 	return
 }
 
-func (c *communityRepo) GetCommunityDetailByID(ID int64) (res *model.Community, err error) {
+func (c *communityRepo) GetCommunityDetailByID(ctx context.Context, ID int64) (res *model.Community, err error) {
 	res = new(model.Community)
-	if err = c.db.Where("community_id", ID).First(&res).Error; err != nil {
+	if err = c.db.WithContext(ctx).Where("community_id", ID).First(&res).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			zap.L().Error("repo.GetCommunityList no data", zap.Error(err))
 			err = e.ErrInvalidID

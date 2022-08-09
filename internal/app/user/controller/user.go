@@ -10,20 +10,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SignUp godoc
+// Register godoc
 // @Summary 用户注册账号
 // @Description 用户注册
 // @Tags 用户接口
 // @ID /user/signup
 // @Accept  json
 // @Produce  json
-// @Param body body model.SignUpParam true "body"
+// @Param body body model.RegisterReq true "body"
 // @Success 200 {object} ginx.Resp{data=model.UserDto} "success"
 // @Router /user/signup [post]
-func (u *UserController) SignUp(c *gin.Context) {
+func (u *UserController) Register(c *gin.Context) {
 	var (
 		err    error
-		uParam model.SignUpParam
+		uParam model.RegisterReq
 		uDto   *model.UserDto
 	)
 	if errStr := ginx.BindAndValid(c, &uParam); errStr != "" {
@@ -31,7 +31,7 @@ func (u *UserController) SignUp(c *gin.Context) {
 		return
 	}
 
-	uDto, err = u.userService.SignUp(&uParam)
+	uDto, err = u.userService.Register(c.Request.Context(), &uParam)
 
 	switch err {
 	case nil:
@@ -45,20 +45,20 @@ func (u *UserController) SignUp(c *gin.Context) {
 	}
 }
 
-// SignIn godoc
+// Login godoc
 // @Summary 登录
 // @Description 登录
 // @Tags 用户接口
 // @ID /user/signin
 // @Accept  json
 // @Produce json
-// @Param body body model.SignInParam true "body参数"
+// @Param body body model.LoginReq true "body参数"
 // @Success 200 {string} string "ok" "登陆成功"
 // @Router /user/signin [post]
-func (u UserController) SignIn(c *gin.Context) {
+func (u *UserController) Login(c *gin.Context) {
 	var (
 		err       error
-		signParam model.SignInParam
+		signParam model.LoginReq
 		token     string
 	)
 
@@ -66,7 +66,7 @@ func (u UserController) SignIn(c *gin.Context) {
 		ginx.RespErrorWithMsg(c, e.CodeError, errStr)
 		return
 	}
-	if token, err = u.userService.Login(&signParam); err != nil {
+	if token, err = u.userService.Login(c.Request.Context(), &signParam); err != nil {
 		if errors.Is(err, e.ErrUserNotExist) {
 			ginx.RespError(c, e.CodeUserNotExist)
 			return
@@ -74,7 +74,7 @@ func (u UserController) SignIn(c *gin.Context) {
 		ginx.RespError(c, e.CodeWrongUserNameOrPassword)
 		return
 	}
-	token, err = u.userService.Login(&signParam)
+	token, err = u.userService.Login(c.Request.Context(), &signParam)
 
 	switch err {
 	case nil:
@@ -108,7 +108,7 @@ func (u *UserController) Get(c *gin.Context) {
 		return
 	}
 
-	uDto, err = u.userService.SelectByID(userID)
+	uDto, err = u.userService.SelectByID(c.Request.Context(), userID)
 
 	switch err {
 	case nil:
@@ -143,7 +143,7 @@ func (u *UserController) Delete(c *gin.Context) {
 		return
 	}
 
-	if !u.userService.Delete(userID) {
+	if !u.userService.Delete(c.Request.Context(), userID) {
 		ginx.RespError(c, e.CodeError)
 		return
 	}

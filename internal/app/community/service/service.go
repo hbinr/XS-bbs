@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	"xs.bbs/internal/app/community/model"
 	"xs.bbs/internal/app/community/repository"
 )
@@ -22,9 +24,9 @@ type (
 	// CommunityService 文章标签接口
 	CommunityService interface {
 		// GetCommunityList 获取所有文章标签
-		GetCommunityList() ([]*CommunityDto, error)
+		GetCommunityList(context.Context) ([]*CommunityDto, error)
 		// GetCommunityDetailByID 根据社区id获取社区详情
-		GetCommunityDetailByID(int64) (*CommunityDto, error)
+		GetCommunityDetailByID(context.Context, int64) (*CommunityDto, error)
 	}
 )
 

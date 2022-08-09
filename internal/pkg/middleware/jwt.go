@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"xs.bbs/internal/pkg/constant/e"
 	"xs.bbs/internal/pkg/ginx"
-	"xs.bbs/pkg/tool/jwt"
+	"xs.bbs/pkg/utils/jwt"
 )
 
 // JWTAuth jwt中间件

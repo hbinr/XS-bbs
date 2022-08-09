@@ -18,9 +18,8 @@ mysql:
   addr: "127.0.0.1:4000"
   dsn: "root:123456@tcp(127.0.0.1:3306)/bbs?timeout=5s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8,utf8mb4"
   log_mode: false
-  max_open_conns: 10
-  max_idle_conns: 10
-
+  max_open_cons: 10
+  max_idle_cons: 10
 
 redis:
   host: "127.0.0.1"
@@ -28,4 +27,4 @@ redis:
   password: ""
   db: 0
   pool_size: 100
-  min_idle_conns: 5
+  min_idle_cons: 5

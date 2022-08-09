@@ -13,20 +13,20 @@ type PostController struct {
 	postService service.PostService
 }
 
-func NewPostController(e *gin.Engine, us service.PostService) *PostController {
-	post := &PostController{
-		engine:      e,
+func NewPostController(us service.PostService) *PostController {
+	return &PostController{
 		postService: us,
 	}
+}
 
-	g := e.Group("/api/post")
+func (p *PostController) RegisterHTTPRouter(r *gin.Engine) {
+	g := r.Group("/api/post")
 
 	{
-		g.POST("/", post.CreatePostHandle)
-		g.GET("/info", post.GetPostDetailHandle)
-		g.GET("/list", post.GetPostListHandle)
-		g.POST("/vote", post.VoteForPost)
+		g.POST("/", p.CreatePostHandle)
+		g.GET("/info", p.GetPostDetailHandle)
+		g.GET("/list", p.GetPostListHandle)
+		g.POST("/vote", p.VoteForPost)
 	}
 
-	return post
 }

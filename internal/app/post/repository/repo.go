@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/go-redis/redis/v9"
 	"gorm.io/gorm"
 	"xs.bbs/internal/app/post/model"
@@ -20,12 +22,12 @@ type (
 	}
 
 	PostRepo interface {
-		Create(post *model.Post) error
-		GetPostByID(pID int64) (*model.Post, error)
-		GetPostListByIDs(ids []string) ([]*model.Post, int64, error)
-		GetPostList(page, pageSize int) ([]*model.Post, int64, error)
+		Create(ctx context.Context, post *model.Post) error
+		GetPostByID(ctx context.Context, pID int64) (*model.Post, error)
+		GetPostListByIDs(ctx context.Context, ids []string) ([]*model.Post, int64, error)
+		GetPostList(ctx context.Context, page, pageSize int) ([]*model.Post, int64, error)
 		// Vote 投票,数据存储于redis中
-		Vote(userID, postID string, value float64) error
+		Vote(ctx context.Context, userID, postID string, value float64) error
 	}
 )
 

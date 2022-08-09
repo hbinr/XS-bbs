@@ -3,6 +3,7 @@ package cache
 import (
 	"context"
 	"fmt"
+
 	"github.com/go-redis/redis/v9"
 
 	"go.uber.org/zap"
@@ -18,7 +19,7 @@ func Init(cfg *conf.Config) (*redis.Client, error) {
 		Password:     cfg.Password, // no password set
 		DB:           cfg.DB,       // use default db
 		PoolSize:     cfg.PoolSize,
-		MinIdleConns: cfg.MinIdleConns,
+		MinIdleConns: cfg.MinIdleCons,
 	})
 	if _, err := rdb.Ping(context.Background()).Result(); err != nil {
 		zap.L().Error("redis ping failed", zap.Error(err))

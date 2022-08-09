@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	community "xs.bbs/internal/app/community/repository"
 	"xs.bbs/internal/app/post/model"
 	post "xs.bbs/internal/app/post/repository"
@@ -22,10 +24,10 @@ type (
 		communityRepo community.CommunityRepo
 	}
 	PostService interface {
-		Create(post *model.PostParam) error
-		GetPostByID(pID int64) (*model.PostDetailDto, error)
-		GetPostListByIDs(paging *util.PageInfo) ([]*model.PostDetailDto, int64, error)
-		Vote(userID int64, voteP *model.PostVoteParam) error
+		Create(ctx context.Context, post *model.PostParam) error
+		GetPostByID(ctx context.Context, id int64) (*model.PostDetailDto, error)
+		GetPostListByIDs(ctx context.Context, paging *util.PageInfo) ([]*model.PostDetailDto, int64, error)
+		Vote(ctx context.Context, userID int64, voteP *model.PostVoteParam) error
 	}
 )
 
