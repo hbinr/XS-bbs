@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	Entity = &model.Post{}
+	Entity = model.Post{}
 	//Set   = wire.NewSet(
 	//	repo.PostRepoSet,
 	//	service.PostServiceSet,

@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	Entity = &model.User{}
+	Entity = model.User{}
 	// 不使用wire依赖注入
 	//Set   = wire.NewSet(
 	//	repo.UserDaoSet,

@@ -16,7 +16,7 @@ import (
 var Entities = []interface{}{user.Entity, community.Entity, post.Entity}
 
 func Build(db *gorm.DB, rdb *redis.Client) *gin.Engine {
-	if err := db.AutoMigrate(Entities); err != nil {
+	if err := db.AutoMigrate(Entities...); err != nil {
 		zap.L().Error("auto migrate  tables error", zap.Error(err))
 	}
 

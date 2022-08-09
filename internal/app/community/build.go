@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	Entity = &model.Community{}
+	Entity = model.Community{}
 	//Set   = wire.NewSet(
 	//	repo.CommunityDaoSet,
 	//	service.CommunityServiceSet,
